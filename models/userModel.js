@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
@@ -26,6 +27,7 @@ const userSchema = new Schema({
   userName: {
     type: String,
     require: true,
+    unique:true,
     min: [3, "Name at least 4 characters"],
     max: [32, "Name at most 4 characters"],
   },
@@ -43,16 +45,6 @@ const userSchema = new Schema({
   }
 });
 
-const registerValidator = function( data ){
-    const schema =Joi.object( {
-        email:Joi.string().email().required(),
-        password:Joi.string().min(4).max(32).required(),
-        userName:Joi.string().min(3).max(32).required(),
-        gender:Joi.string().required()
-    })
-    const result  = schema.validate(data);
-    return result
-}
 userSchema.pre("save",async function(next) {
     try {
       if (!this.isModified("password")) {
@@ -66,10 +58,50 @@ userSchema.pre("save",async function(next) {
     }
 })
 
+userSchema.methods.generateJWToken = function () {
+  const payload = {
+    email: this.email,
+    userName: this.userName,
+  };   
+  let token = jwt.sign(payload,config.get("privateKey"));
+  return token;
+}
+
+userSchema.methods.comparePassword = async function ( password, next ){ 
+  try {
+    let isMacth  = await bcrypt.compare(password,this.password);
+    return isMacth
+  } catch (error) {
+    return next();
+  }
+}
+
+
 const User = mongoose.model("User",userSchema);
+
+const registerValidator = function (data) {
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(4).max(32).required(),
+    userName: Joi.string().min(3).max(32).required(),
+    gender: Joi.required(),
+  });
+  const result = schema.validate(data);
+  return result;
+};
+
+const signInValidator = function (data) {
+   const schema = Joi.object({
+     email: Joi.string().email().required(),
+     password: Joi.string().min(4).max(32).required(),
+   });
+   const result = schema.validate(data);
+   return result;
+}
 
 module.exports = {
     User,
-    registerValidator
+    registerValidator,
+    signInValidator
 }
-// module.exports.registerValidator = registerValidator
+

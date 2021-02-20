@@ -1,9 +1,14 @@
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3030;
+const config = require("config");
 const mongoose = require("mongoose");
 const userRoute = require("./route/User");
 
+if(!config.get("privateKey")){
+  console.log("FATAL ERROR: privateKey is not defined ");
+  process.exit(1)
+}
 
 mongoose
   .connect("mongodb://localhost/thesis_app", {
