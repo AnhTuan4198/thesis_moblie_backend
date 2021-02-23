@@ -3,7 +3,7 @@ const Joi = require("joi");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const { Schema } = mongoose;
-
+const config = require("config")
 
 const userSchema = new Schema({
   email: {
@@ -60,10 +60,12 @@ userSchema.pre("save",async function(next) {
 
 userSchema.methods.generateJWToken = function () {
   const payload = {
+    _id:this._id,
     email: this.email,
     userName: this.userName,
   };   
-  let token = jwt.sign(payload,config.get("privateKey"));
+  let token = jwt.sign(payload, config.get("privateKey"));
+  
   return token;
 }
 
