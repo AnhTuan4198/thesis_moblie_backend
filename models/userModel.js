@@ -72,6 +72,7 @@ userSchema.methods.generateJWToken = function () {
 userSchema.methods.comparePassword = async function ( password, next ){ 
   try {
     let isMacth  = await bcrypt.compare(password,this.password);
+    // console.log(isMatch);
     return isMacth
   } catch (error) {
     return next();
