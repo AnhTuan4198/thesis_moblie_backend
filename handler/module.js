@@ -1,6 +1,12 @@
+const config = require("config");
+
 const {Module,registerModuleValidator } = require("../models/moduleModel");
 
 exports.addModule = async(req, res, next) => {
+	if (req.get("secret_key") != config.get("secretKey")) return next({
+		message: "Unauthorize",
+		statusCode: 401
+	});
 	const {
 		error
 	} = registerModuleValidator(req.body);
@@ -38,6 +44,10 @@ exports.addModule = async(req, res, next) => {
 }
 
 exports.getAllModules = async (req, res, next) => {
+	if (req.get("secret_key") != config.get("secretKey")) return next({
+		message: "Unauthorize",
+		statusCode: 401
+	});
 	try {
 		let allModules = await Module.find();
 		return res.status(200).send(allModules);
