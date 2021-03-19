@@ -1,7 +1,6 @@
 const config = require("config");
 
 const {Module,registerModuleValidator } = require("../models/moduleModel");
-const {Customer} = require("../models/customerModel");
 
 exports.addModule = async(req, res, next) => {
 	if (req.get("secret_key") != config.get("secretKey")) return next({
