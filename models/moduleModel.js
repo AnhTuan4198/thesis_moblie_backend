@@ -12,11 +12,13 @@ const moduleSchema = new Schema({
 	},
 	serviceId: {
 		type: String,
-		require: true
+		require: false,
+		default: " "
 	},
 	createdAt: {
 		type: Date,
-		require: true,
+		require: false,
+		default: new Date()
 	},
 	createdBy: {
 		type: Number,
@@ -24,21 +26,9 @@ const moduleSchema = new Schema({
 	}
 });
 
-moduleSchema.pre("save", async function(next) {
-	try {
-		let currentTime = new Date();
-		this.createdAt = currentTime;
-		return next();
-	} catch (error) {
-		return next();
-	}
-})
-
 const registerModuleValidator = function(data) {
 	const schema = Joi.object({
 		moduleId: Joi.string().required(),
-		serviceId: Joi.string().required(),
-		createdAt: Joi.date().required(),
 		createdBy: Joi.number().required()
 	})
 	const result = schema.validate(data);

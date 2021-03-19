@@ -14,7 +14,7 @@ exports.addModule = async(req, res, next) => {
 
 	try {
 		let existModule = await Module.findOne({
-			customerId: req.body.moduleId
+			moduleId: req.body.moduleId
 		});
 		if (existModule) return next({
 			message: "Module already exists",
