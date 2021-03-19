@@ -1,14 +1,17 @@
-
 const express = require("express");
 const userRoute = require("../route/User");
+const moduleRoute = require("../route/Module");
 const errorHandler = require("../handler/error");
 
 module.exports = function (app) {
-    app.use(express.json());
+	app.use(express.json());
 
-    // all route for user
-    app.use("/auth", userRoute);
+	// all route for user
+	app.use("/auth", userRoute);
 
-    //app error handler
-    app.use(errorHandler);
+	// route for IoT device
+	app.use("/module", moduleRoute);
+
+	//app error handler
+	app.use(errorHandler);
 }
