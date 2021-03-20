@@ -29,4 +29,4 @@ const identificationValidator = function(data) {
 
 const Identification = mongoose.model('Identification', identificationSchema);
 
-module.exports = {Identification, identificationSchema}
+module.exports = {Identification, identificationValidator}

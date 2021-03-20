@@ -1,7 +1,7 @@
 const express = require("express");
 const userRoute = require("../route/User");
 const moduleRoute = require("../route/Module");
-const identificationRoute = require();
+const identificationRoute = require("../route/Identification");
 const errorHandler = require("../handler/error");
 
 module.exports = function (app) {
