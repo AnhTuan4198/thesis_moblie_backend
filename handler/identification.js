@@ -2,7 +2,7 @@ const config = require("config");
 
 const {Identification, identificationValidator} = require("../models/identificationModel");
 const {Module} = require("../models/moduleModel");
-const {Customer} = require("../models/customerModel");
+const {Ticket} = require("../models/ticketModel");
 
 exports.identifyCustomer = async(req, res, next) => {
 	if (req.get("secret_key") != config.get("secretKey")) return next({
@@ -25,20 +25,20 @@ exports.identifyCustomer = async(req, res, next) => {
 		});
 
 		// Checking existing customer's code
-		let existCustomer = await Customer.findOne({
-			customerCode: req.body.customerCode
+		let existTicket = await Ticket.findOne({
+			ticketCode: req.body.ticketCode
 		});
-		if (!existCustomer) return next({
+		if (!existTicket) return next({
 			message: "Customer not found",
 			statusCode: 404
 		});
 		
 		// Handle valid access to services of customer
-		switch(existCustomer.customerType) {
+		switch(existTicket.role) {
 			case 'Gold':
 				break;
 			case 'Silver':
-				if (!existCustomer.availableService.includes(2)) return next({
+				if (!existTicket.availableService.includes(2)) return next({
 					message: "Unavailable service for this user",
 					statusCode: 403
 				})
@@ -52,13 +52,13 @@ exports.identifyCustomer = async(req, res, next) => {
 		const {
 			_id,
 			moduleId,
-			customerCode,
+			ticketCode,
 			scannedAt
 		} = newIdentification;
 		return res.status(200).json({
 			_id,
 			moduleId,
-			customerCode,
+			ticketCode,
 			scannedAt
 		});
 	} catch(error) {

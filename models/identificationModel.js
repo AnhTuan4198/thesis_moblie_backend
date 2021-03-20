@@ -8,7 +8,7 @@ const identificationSchema =  new Schema({
 		type: String,
 		require: true,
 	},
-	customerCode: {
+	ticketCode: {
 		type: String,
 		require: true
 	},
@@ -21,7 +21,7 @@ const identificationSchema =  new Schema({
 const identificationValidator = function(data) {
 	const schema = Joi.object({
 		moduleId: Joi.string().required(),
-		customerCode: Joi.string().required(),
+		ticketCode: Joi.string().required(),
 	})
 	const result =  schema.validate(data);
 	return result;
