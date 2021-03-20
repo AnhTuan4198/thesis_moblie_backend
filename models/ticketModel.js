@@ -4,13 +4,13 @@ const {
 	Schema
 } = mongoose;
 
-const customerSchema = new Schema({
-	customerCode: {
+const TicketSchema = new Schema({
+	ticketCode: {
 		type: String,
 		require: true,
 		unique: true
 	},
-	customerType: {
+	role: {
 		type: String,
 		require: true
 	},
@@ -20,15 +20,15 @@ const customerSchema = new Schema({
 	}
 })
 
-const createCustomerValidator = function(data) {
+const createTicketValidator = function(data) {
 	const schema = Joi.object({
-		customerCode: Joi.string().required(),
-		customerType: Joi.string().required()
+		ticketCode: Joi.string().required(),
+		role: Joi.string().required()
 	})
 	const result = schema.validate(data);
 	return result;
 }
 
-const Customer = mongoose.model('Customer', customerSchema);
+const Ticket = mongoose.model('Ticket', TicketSchema);
 
-module.exports = {Customer}
+module.exports = {Ticket}
