@@ -14,16 +14,22 @@ const TicketSchema = new Schema({
 		type: String,
 		require: true
 	},
-	createdAt: {
+	startTime: {
 		type: Date,
-		default: new Date()
+		require: true
+	},
+	endTime: {
+		type: Date,
+		require: true
 	}
 })
 
 const createTicketValidator = function(data) {
 	const schema = Joi.object({
 		ticketCode: Joi.string().required(),
-		role: Joi.string().required()
+		role: Joi.string().required(),
+		startTime: Joi.date().required(),
+		endTime: Joi.date().required()
 	})
 	const result = schema.validate(data);
 	return result;
