@@ -1,10 +1,14 @@
+const config = require("config");
 const ProvisioningTransport = require("azure-iot-provisioning-device-mqtt").Mqtt;
 
 //Provisioning Service  Client
 const ProvisioningServiceClient = require("azure-iot-provisioning-service").ProvisioningServiceClient;
 
 //Provisioning Service connection string 
-const ProvisionServiceConnectionString = 'HostName=thesisDPS.azure-devices-provisioning.net;SharedAccessKeyName=provisioningserviceowner;SharedAccessKey=/PgfdWwZhwNyHhLepsTcwTCh/vC7XcurMomHJRlmF6w='
+    
+const ProvisionServiceConnectionString = config.get(
+  "provisionServiceConnection"
+);
 
 // Provisioning Device Client
 const SymmetricKeySecurityClient = require("azure-iot-security-symmetric-key").SymmetricKeySecurityClient;
