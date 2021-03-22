@@ -5,10 +5,7 @@ const ProvisioningTransport = require("azure-iot-provisioning-device-mqtt").Mqtt
 const ProvisioningServiceClient = require("azure-iot-provisioning-service").ProvisioningServiceClient;
 
 //Provisioning Service connection string 
-    
-const ProvisionServiceConnectionString = config.get(
-  "provisionServiceConnection"
-);
+const ProvisionServiceConnectionString = config.get("provisionServiceConnection");
 
 // Provisioning Device Client
 const SymmetricKeySecurityClient = require("azure-iot-security-symmetric-key").SymmetricKeySecurityClient;
@@ -16,13 +13,14 @@ const ProvisioningDeviceClient = require("azure-iot-provisioning-device").Provis
 
 
 //config variable
-const provisioningHost = "thesisDPS.azure-devices-provisioning.net";
-const idScope = "0ne0025B427";
+const provisioningHost = config.get("provisioningHost");
+const idScope = config.get("idScope");
 
 //auto-gen variable
 const shortId = require("shortid");
 
 exports.enrollmentRegister = async function (req,res,next) {
+    console.log(ProvisionServiceConnectionString)
     try {
         const provisionService = await ProvisioningServiceClient.fromConnectionString(ProvisionServiceConnectionString);
         
@@ -42,6 +40,7 @@ exports.enrollmentRegister = async function (req,res,next) {
         //     result:result.responseBody  
         // })
         res.locals = result.responseBody;
+        // console.log(res.locals);
         return next();
     } catch (error) {
        return next(error.responseBody) 
@@ -52,6 +51,7 @@ exports.enrollmentRegister = async function (req,res,next) {
 exports.deviceRegister = async function(req,res,next ){
     try {
         const payload = res.locals;
+        console.log(payload);
         const registrationId = payload.registrationId;
         const symmetricKey = payload.attestation.symmetricKey.primaryKey;
 
@@ -74,7 +74,6 @@ exports.deviceRegister = async function(req,res,next ){
             connectionString:deviceConnectionString
         })
     } catch (error) {
-        console.log(error)
         return next(error.result)
     }
 }
