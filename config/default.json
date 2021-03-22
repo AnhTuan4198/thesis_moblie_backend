@@ -1,5 +1,5 @@
 {
     "privateKey":"thesis_ap",
     "secretKey": "my_secret_key",
-    "provisionSeviceConection":"provi_service_conn_string"
+    "provisionServiceConnection":"provi_service_conn_string"
 }
