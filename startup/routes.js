@@ -1,6 +1,7 @@
 const express = require("express");
 const userRoute = require("../route/User");
 const moduleRoute = require("../route/Module");
+const deviceTwinRoute = require("../route/DeviceTwin")
 const errorHandler = require("../handler/error");
 
 module.exports = function (app) {
@@ -12,6 +13,7 @@ module.exports = function (app) {
 	// route for IoT device
 	app.use("/module", moduleRoute);
 
+	app.use("/device-twin/",deviceTwinRoute);
 	//app error handler
 	app.use(errorHandler);
 }

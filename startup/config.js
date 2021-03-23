@@ -5,4 +5,5 @@ module.exports = function () {
       console.log("FATAL ERROR: privateKey is not defined ");
       process.exit(1);
     }
+    
 }

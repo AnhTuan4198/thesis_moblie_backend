@@ -6,17 +6,17 @@ const twinService = iotHub.Registry.fromConnectionString(twinServiceKey);
 
 exports.updateIndividualDevice = async function (req,res,next){
     try{
-        const deviceId = "myDeviceId5";
+       
+        
+        const {deviceId , payload} = req.body;
 
         const instance = await twinService.getTwin(deviceId);
         const twin = instance.responseBody;
 
-        const patch = {
-            tags:{
-                location:"hcmut"
-            }
-        }
-        const feedback = await twin.update(patch,query);
+        const patch = {...payload}
+
+        // twin.update(payload, immediately invoke)
+        const feedback = await twin.update(patch);
         //return response here
         return res.status(200).json({
             Message:"update device successfully",
@@ -28,15 +28,5 @@ exports.updateIndividualDevice = async function (req,res,next){
         return next(err.responseBody)
     }
 }
-        function query(err,twin) {
-                let query = twinService.createQuery("SELECT * FROM devices WHERE tags.location = 'hcmut'",100);
-                query.nextAsTwin((err,result)=>{
-                    if(err){
-                        console.log(err)
-                    }else{
-                        console.log(`All device in hcmut:${result.map(d=>d.deviceId)}`)
-                    }
-                })
-        }
 
-exports.updateIndividualDevice();
+
