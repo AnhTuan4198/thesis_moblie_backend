@@ -9,7 +9,7 @@ require('./startup/routes')(app);
 
 
 let key = config.get("privateKey");
-console.log(key);
+    
 app.listen( PORT ,()=>{
     console.log("listenning on port " +PORT)
 })

@@ -1,4 +1,7 @@
 {
-    "privateKey":"thesis_ap",
-    "secretKey": "my_secret_key"
+    "privateKey":"thesis_app",
+    "secretKey": "my_secret_key",
+    "provisionServiceConnection":"provisionServiceConnection",
+    "provisioningHost":"provisioningHost",
+    "idScope":"idScope"
 }

@@ -15,6 +15,10 @@ const moduleSchema = new Schema({
 		require: false,
 		default: " "
 	},
+	gate: {
+		type: Number,
+		default: 0
+	},
 	createdAt: {
 		type: Date,
 		require: false,
