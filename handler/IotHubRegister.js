@@ -71,7 +71,7 @@ exports.deviceRegister = async function(req,res,next ){
         const deviceConnectionString = `HostName=${response.assignedHub};DeviceId=${response.deviceId};SharedAccessKey=${symmetricKey}`
         
         return res.status(200).json({
-            connectionString:deviceConnectionString
+            connection_string:deviceConnectionString
         })
     } catch (error) {
         return next(error.result)
