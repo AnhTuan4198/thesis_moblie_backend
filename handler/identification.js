@@ -3,6 +3,7 @@ const config = require("config");
 const {Identification, identificationValidator} = require("../models/identificationModel");
 const {Module} = require("../models/moduleModel");
 const {Ticket} = require("../models/ticketModel");
+const {Service} = require("../models/serviceModel");
 
 exports.identifyCustomer = async(req, res, next) => {
 	if (req.get("secret_key") != config.get("secretKey")) return next({
@@ -29,39 +30,47 @@ exports.identifyCustomer = async(req, res, next) => {
 			ticketCode: req.body.ticketCode
 		});
 		if (!existTicket) return next({
-			message: "Customer not found",
+			message: "Ticket not found",
 			statusCode: 404
 		});
+
+		// Checking ticket's availability
+		let currentTime = new Date();
+		if (existTicket.startTime > currentTime || existTicket.endTime < currentTime) return next({
+			message: "Ticket is not due or expired",
+			statusCode: 403
+		}) ;
 		
 		// Handle valid access to services of customer
-		switch(existTicket.role) {
-			case 'Gold':
-				break;
-			case 'Silver':
-				if (!existTicket.availableService.includes(2)) return next({
-					message: "Unavailable service for this user",
-					statusCode: 403
-				})
-				break;
-		}
+		let currentService = await Service.findOne({serviceId: existModule.serviceId}).serviceId;
+		let availableService = await Service.find({
+			availableTicket: { $eq: existTicket.ticketType}
+		}, {serviceId: 1});
 
-		// Record successful scan 
-		let newIdentification = await Identification.create({
-			...req.body
+		if (!availableService.includes(currentService)) return next({
+			message: "Unavailable service for this user",
+			statusCode: 403
 		});
-		const {
-			_id,
-			moduleId,
-			ticketCode,
-			scannedAt
-		} = newIdentification;
-		return res.status(200).json({
-			_id,
-			moduleId,
-			ticketCode,
-			scannedAt
-		});
+		return next();
 	} catch(error) {
 		return next(error);
 	}
+}
+
+exports.storeIdentification = async(req, res, next) => {
+	let newIdentification = await Identification.create({
+		...req.body
+	});
+	const {
+		_id,
+		moduleId,
+		ticketCode,
+		scannedAt
+	} = newIdentification;
+	return res.status(200).json({
+		_id,
+		moduleId,
+		ticketCode,
+		scannedAt
+	});
 }

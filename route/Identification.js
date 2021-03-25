@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
-const {identifyCustomer} = require("../handler/identification");
+const {identifyCustomer, storeIdentification} = require("../handler/identification");
 
-router.post('/', identifyCustomer);
+router.post('/', identifyCustomer, storeIdentification);
 
 module.exports = router;

@@ -1,4 +1,6 @@
 const config = require("config");
+const {addModule} = require("module");
+
 const ProvisioningTransport = require("azure-iot-provisioning-device-mqtt").Mqtt;
 
 //Provisioning Service  Client
@@ -20,6 +22,11 @@ const idScope = config.get("idScope");
 const shortId = require("shortid");
 
 exports.enrollmentRegister = async function (req,res,next) {
+
+	if (req.get("secret_key") != config.get("secretKey")) return next({
+		message: "Unauthorize",
+		statusCode: 401
+	});
     console.log(ProvisionServiceConnectionString)
     try {
         const provisionService = await ProvisioningServiceClient.fromConnectionString(ProvisionServiceConnectionString);
@@ -51,7 +58,6 @@ exports.enrollmentRegister = async function (req,res,next) {
 exports.deviceRegister = async function(req,res,next ){
     try {
         const payload = res.locals;
-        console.log(payload);
         const registrationId = payload.registrationId;
         const symmetricKey = payload.attestation.symmetricKey.primaryKey;
 
@@ -68,11 +74,10 @@ exports.deviceRegister = async function(req,res,next ){
         )
 
         const response = await provisioningClient.register();
-        const deviceConnectionString = `HostName=${response.assignedHub};DeviceId=${response.deviceId};SharedAccessKey=${symmetricKey}`
-        
+        const deviceConnectionString = `HostName=${response.assignedHub};DeviceId=${response.deviceId};SharedAccessKey=${symmetricKey}`;
         return res.status(200).json({
             connection_string:deviceConnectionString
-        })
+        }) && next();
     } catch (error) {
         return next(error.result)
     }

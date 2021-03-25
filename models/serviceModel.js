@@ -14,7 +14,7 @@ const serviceSchema = new Schema({
 		type: String,
 		require: true
 	},
-	availableTicker: {
+	availableTicket: {
 		type: Array,
 		require: true
 	},
