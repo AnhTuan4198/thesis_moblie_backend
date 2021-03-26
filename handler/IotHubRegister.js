@@ -1,5 +1,4 @@
 const config = require("config");
-const {addModule} = require("module");
 
 const ProvisioningTransport = require("azure-iot-provisioning-device-mqtt").Mqtt;
 
@@ -27,32 +26,27 @@ exports.enrollmentRegister = async function (req,res,next) {
 		message: "Unauthorize",
 		statusCode: 401
 	});
-    console.log(ProvisionServiceConnectionString)
-    try {
-        const provisionService = await ProvisioningServiceClient.fromConnectionString(ProvisionServiceConnectionString);
-        
-        let registrationId = shortId.generate();
-        const enrollment = {
-            registrationId,
-            deviceID:registrationId,
-            attestation: {
-                type: 'symmetricKey'
-            },
-            provisioningStatus: 'enabled',
-            allocationPolicy: 'geoLatency',
-        };
+	
+	try {
+		const provisionService = await ProvisioningServiceClient.fromConnectionString(ProvisionServiceConnectionString);
+		
+		let registrationId = shortId.generate();
+		const enrollment = {
+		registrationId,
+		deviceID:registrationId,
+		attestation: {
+			type: 'symmetricKey'
+		},
+		provisioningStatus: 'enabled',
+		allocationPolicy: 'geoLatency',
+		};
 
-        let result = await provisionService.createOrUpdateIndividualEnrollment(enrollment);
-        // return res.status(200).json({
-        //     result:result.responseBody  
-        // })
-        res.locals = result.responseBody;
-        // console.log(res.locals);
-        return next();
-    } catch (error) {
-       return next(error.responseBody) 
-    }
-
+		let result = await provisionService.createOrUpdateIndividualEnrollment(enrollment);
+		res.locals = result.responseBody;
+		return next();
+	} catch (error) {
+       		return next(error.responseBody) 
+    	}
 }
 
 exports.deviceRegister = async function(req,res,next ){
@@ -82,7 +76,3 @@ exports.deviceRegister = async function(req,res,next ){
         return next(error.result)
     }
 }
-
-
-// exports.enrollmentRegister();
-// exports.deviceRegister()
