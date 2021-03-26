@@ -68,7 +68,6 @@ exports.storeIdentification = async(req, res, next) => {
 			...res.locals
 		});
 		const {
-			_id,
 			moduleId,
 			serviceId,
 			gate,
@@ -76,7 +75,6 @@ exports.storeIdentification = async(req, res, next) => {
 			scannedAt
 		} = newIdentification;
 		return res.status(200).json({
-			_id,
 			moduleId,
 			serviceId,
 			gate,
