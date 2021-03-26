@@ -4,7 +4,7 @@ const {Module, updateModuleValidator} = require("../models/moduleModel");
 
 exports.getAllModules = async (req, res, next) => {
 	if (req.get("secret_key") != config.get("secretKey")) return next({
-		message: "Unauthorize",
+		message: "Unauthorized",
 		statusCode: 401
 	});
 	try {
