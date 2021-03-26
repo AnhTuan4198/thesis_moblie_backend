@@ -25,9 +25,8 @@ const moduleSchema = new Schema({
 	}
 });
 
-const registerModuleValidator = function(data) {
+const updateModuleValidator = function(data) {
 	const schema = Joi.object({
-		moduleId: Joi.string().required(),
 		serviceId: Joi.string(),
 		gate: Joi.string()
 	})
@@ -37,4 +36,4 @@ const registerModuleValidator = function(data) {
 
 const Module = mongoose.model('Module', moduleSchema);
 
-module.exports = {Module, registerModuleValidator}
+module.exports = {Module, updateModuleValidator}

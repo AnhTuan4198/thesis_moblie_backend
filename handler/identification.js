@@ -7,7 +7,7 @@ const {Service} = require("../models/serviceModel");
 
 exports.identifyCustomer = async(req, res, next) => {
 	if (req.get("secret_key") != config.get("secretKey")) return next({
-		message: "Unauthorize",
+		message: "Unauthorized",
 		statusCode: 401
 	});
 	const {
@@ -68,7 +68,6 @@ exports.storeIdentification = async(req, res, next) => {
 			...res.locals
 		});
 		const {
-			_id,
 			moduleId,
 			serviceId,
 			gate,
@@ -76,7 +75,6 @@ exports.storeIdentification = async(req, res, next) => {
 			scannedAt
 		} = newIdentification;
 		return res.status(200).json({
-			_id,
 			moduleId,
 			serviceId,
 			gate,

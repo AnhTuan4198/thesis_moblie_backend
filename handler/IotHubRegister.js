@@ -23,7 +23,7 @@ const shortId = require("shortid");
 exports.enrollmentRegister = async function (req,res,next) {
 
 	if (req.get("secret_key") != config.get("secretKey")) return next({
-		message: "Unauthorize",
+		message: "Unauthorized",
 		statusCode: 401
 	});
 	
