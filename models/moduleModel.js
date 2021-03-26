@@ -12,28 +12,24 @@ const moduleSchema = new Schema({
 	},
 	serviceId: {
 		type: String,
-		require: false,
 		default: " "
 	},
 	gate: {
-		type: Number,
-		default: 0
+		type: String,
+		default: " "
 	},
 	createdAt: {
 		type: Date,
 		require: false,
 		default: new Date()
-	},
-	createdBy: {
-		type: Number,
-		require: true
 	}
 });
 
 const registerModuleValidator = function(data) {
 	const schema = Joi.object({
 		moduleId: Joi.string().required(),
-		createdBy: Joi.number().required()
+		serviceId: Joi.string(),
+		gate: Joi.string()
 	})
 	const result = schema.validate(data);
 	return result;

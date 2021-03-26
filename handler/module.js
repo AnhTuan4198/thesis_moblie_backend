@@ -3,41 +3,18 @@ const config = require("config");
 const {Module,registerModuleValidator} = require("../models/moduleModel");
 
 exports.addModule = async(req, res, next) => {
-	if (req.get("secret_key") != config.get("secretKey")) return next({
-		message: "Unauthorize",
-		statusCode: 401
-	});
-	const {
-		error
-	} = registerModuleValidator(req.body);
-	if  (error) return res.status(400).send(error.details[0].message);
-
 	try {
 		let existModule = await Module.findOne({
-			moduleId: req.body.moduleId
+			moduleId: res.locals.deviceId
 		});
 		if (existModule) return next({
 			message: "Module already exists",
 			statusCode: 400
 		});
-
 		let newModule = await Module.create({
-			...req.body
+			moduleId: res.locals.deviceId
 		});
-		const {
-			_id,
-			moduleId,
-			serviceId,
-			createdAt,
-			createdBy
-		} = newModule;
-		return res.status(200).json({
-			_id,
-			moduleId,
-			serviceId,
-			createdAt,
-			createdBy
-		});
+		return next();
 	} catch (error) {
 		return next(error);
 	}

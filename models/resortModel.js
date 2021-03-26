@@ -29,7 +29,7 @@ const resortSchema = new Schema({
 		require: false,
 		default: new Date()
 	},
-	createdBy: {
+	updatedBy: {
 		type: Number,
 		require: true
 	}

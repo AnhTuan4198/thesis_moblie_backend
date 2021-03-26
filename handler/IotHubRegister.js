@@ -1,4 +1,5 @@
 const config = require("config");
+
 const ProvisioningTransport = require("azure-iot-provisioning-device-mqtt").Mqtt;
 
 //Provisioning Service  Client
@@ -20,38 +21,37 @@ const idScope = config.get("idScope");
 const shortId = require("shortid");
 
 exports.enrollmentRegister = async function (req,res,next) {
-    console.log(ProvisionServiceConnectionString)
-    try {
-        const provisionService = await ProvisioningServiceClient.fromConnectionString(ProvisionServiceConnectionString);
-        
-        let registrationId = shortId.generate();
-        const enrollment = {
-            registrationId,
-            deviceID:registrationId,
-            attestation: {
-                type: 'symmetricKey'
-            },
-            provisioningStatus: 'enabled',
-            allocationPolicy: 'geoLatency',
-        };
 
-        let result = await provisionService.createOrUpdateIndividualEnrollment(enrollment);
-        // return res.status(200).json({
-        //     result:result.responseBody  
-        // })
-        res.locals = result.responseBody;
-        // console.log(res.locals);
-        return next();
-    } catch (error) {
-       return next(error.responseBody) 
-    }
+	if (req.get("secret_key") != config.get("secretKey")) return next({
+		message: "Unauthorize",
+		statusCode: 401
+	});
+	
+	try {
+		const provisionService = await ProvisioningServiceClient.fromConnectionString(ProvisionServiceConnectionString);
+		
+		let registrationId = shortId.generate();
+		const enrollment = {
+		registrationId,
+		deviceID:registrationId,
+		attestation: {
+			type: 'symmetricKey'
+		},
+		provisioningStatus: 'enabled',
+		allocationPolicy: 'geoLatency',
+		};
 
+		let result = await provisionService.createOrUpdateIndividualEnrollment(enrollment);
+		res.locals = result.responseBody;
+		return next();
+	} catch (error) {
+       		return next(error.responseBody) 
+    	}
 }
 
 exports.deviceRegister = async function(req,res,next ){
     try {
         const payload = res.locals;
-        console.log(payload);
         const registrationId = payload.registrationId;
         const symmetricKey = payload.attestation.symmetricKey.primaryKey;
 
@@ -68,16 +68,11 @@ exports.deviceRegister = async function(req,res,next ){
         )
 
         const response = await provisioningClient.register();
-        const deviceConnectionString = `HostName=${response.assignedHub};DeviceId=${response.deviceId};SharedAccessKey=${symmetricKey}`
-        
+        const deviceConnectionString = `HostName=${response.assignedHub};DeviceId=${response.deviceId};SharedAccessKey=${symmetricKey}`;
         return res.status(200).json({
             connection_string:deviceConnectionString
-        })
+        }) && next();
     } catch (error) {
         return next(error.result)
     }
 }
-
-
-// exports.enrollmentRegister();
-// exports.deviceRegister()

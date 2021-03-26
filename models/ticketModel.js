@@ -10,7 +10,7 @@ const TicketSchema = new Schema({
 		require: true,
 		unique: true
 	},
-	role: {
+	ticketType: {
 		type: String,
 		require: true
 	},
@@ -27,7 +27,7 @@ const TicketSchema = new Schema({
 const createTicketValidator = function(data) {
 	const schema = Joi.object({
 		ticketCode: Joi.string().required(),
-		role: Joi.string().required(),
+		ticketType: Joi.string().required(),
 		startTime: Joi.date().required(),
 		endTime: Joi.date().required()
 	})
