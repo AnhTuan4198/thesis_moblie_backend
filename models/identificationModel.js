@@ -12,6 +12,14 @@ const identificationSchema =  new Schema({
 		type: String,
 		require: true
 	},
+	serviceId: {
+		type: String,
+		require: true
+	},
+	gate: {
+		type: String,
+		require: true
+	},
 	scannedAt: {
 		type: Date,
 		default: new Date()
@@ -21,7 +29,7 @@ const identificationSchema =  new Schema({
 const identificationValidator = function(data) {
 	const schema = Joi.object({
 		moduleId: Joi.string().required(),
-		ticketCode: Joi.string().required(),
+		ticketCode: Joi.string().required()
 	})
 	const result =  schema.validate(data);
 	return result;

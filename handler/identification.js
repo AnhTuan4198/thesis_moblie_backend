@@ -42,15 +42,19 @@ exports.identifyCustomer = async(req, res, next) => {
 		}) ;
 		
 		// Handle valid access to services of customer
-		let currentService = await Service.findOne({serviceId: existModule.serviceId}).serviceId;
 		let availableService = await Service.find({
+			serviceId: {$eq: existModule.serviceId},
 			availableTicket: { $eq: existTicket.ticketType}
-		}, {serviceId: 1});
+		});
 
-		if (!availableService.includes(currentService)) return next({
+		if (!availableService) return next({
 			message: "Unavailable service for this user",
 			statusCode: 403
 		});
+		res.locals = {
+			serviceId: existModule.serviceId,
+			gate: existModule.gate
+		};
 		return next();
 	} catch(error) {
 		return next(error);
@@ -58,19 +62,28 @@ exports.identifyCustomer = async(req, res, next) => {
 }
 
 exports.storeIdentification = async(req, res, next) => {
-	let newIdentification = await Identification.create({
-		...req.body
-	});
-	const {
-		_id,
-		moduleId,
-		ticketCode,
-		scannedAt
-	} = newIdentification;
-	return res.status(200).json({
-		_id,
-		moduleId,
-		ticketCode,
-		scannedAt
-	});
+	try {
+		let newIdentification = await Identification.create({
+			...req.body,
+			...res.locals
+		});
+		const {
+			_id,
+			moduleId,
+			serviceId,
+			gate,
+			ticketCode,
+			scannedAt
+		} = newIdentification;
+		return res.status(200).json({
+			_id,
+			moduleId,
+			serviceId,
+			gate,
+			ticketCode,
+			scannedAt
+		});	
+	} catch(error) {
+		return next(error);
+	}
 }
