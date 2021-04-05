@@ -105,6 +105,7 @@ const signInValidator = function (data) {
 module.exports = {
     User,
     registerValidator,
-    signInValidator
+    signInValidator,
+    userSchema
 }
 

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const {
 	Schema
 } = mongoose;
+const {userSchema} = require('./userModel')
 
 const TicketSchema = new Schema({
 	ticketCode: {
@@ -13,6 +14,10 @@ const TicketSchema = new Schema({
 	ticketType: {
 		type: String,
 		require: true
+	},
+	user: {
+		type: userSchema,
+		default: {}
 	},
 	startTime: {
 		type: Date,
