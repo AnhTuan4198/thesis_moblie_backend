@@ -6,7 +6,8 @@ const {
 const historySchema = new Schema({
 	serviceId: {
 		type: String,
-		require: true
+		require: true,
+		ref: 'Service'
 	},
 	serviceType: {
 		type: String,

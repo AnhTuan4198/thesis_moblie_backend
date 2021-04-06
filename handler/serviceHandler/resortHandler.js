@@ -22,7 +22,7 @@ exports.resortVerifyTicket = async(identificationObj) => {
 			ticketCode: identificationObj.ticketCode,
 			user: currentUser
 		});
-		return ;
+		return newLog;
 	} catch(error) {
 		return next();
 	}
@@ -31,6 +31,20 @@ exports.resortVerifyTicket = async(identificationObj) => {
 exports.roomChecking = async(identificationObj) => {
 	try {
 		let serviceInformation = await Resort.findOne({ticketCode: identificationObj.ticketCode});
+		const {
+			ticketCode,
+			resortName,
+			room,
+			resortService,
+			updatedBy
+		} =  serviceInformation;
+		return {
+			ticketCode,
+			resortName,
+			room,
+			resortService,
+			updatedBy
+		};
 	} catch(error) {
 		return next();
 	}

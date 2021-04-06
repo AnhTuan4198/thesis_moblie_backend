@@ -21,7 +21,7 @@ exports.foodVerifyTicket = async(identificationObj) => {
 			ticketCode: identificationObj,ticketCode,
 			user: currentUser
 		});
-		return ;
+		return newLog;
 	} catch(error) {
 		return next();
 	}

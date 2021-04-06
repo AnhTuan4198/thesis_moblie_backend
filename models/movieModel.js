@@ -7,7 +7,8 @@ const {
 const movieSchema = new Schema({
 	serviceId: {
 		type: String,
-		require: true
+		require: true,
+		ref: 'Service'
 	},
 	movieName: {
 		type: String,
@@ -43,7 +44,7 @@ const createMovieValidator = function(data) {
 		performanceTime: Joi.date().required(),
 		theater: Joi.string().required(),
 		availableSeat: Joi.number().required(),
-		createdAt: Joi.data().required(),
+		createdAt: Joi.date(),
 		createdBy: Joi.number().required()
 	})
 	const result = schema.validate(data);

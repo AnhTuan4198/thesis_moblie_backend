@@ -8,7 +8,8 @@ const foodSchema = new Schema({
 	serviceId: {
 		type: String,
 		require: true,
-		unique: true
+		unique: true,
+		ref: 'Service'
 	},
 	foodName: {
 		type: String,

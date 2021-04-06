@@ -7,7 +7,8 @@ const {
 const locationSchema = new Schema({
 	serviceId: {
 		type: String,
-		require: true
+		require: true,
+		ref: 'Service'
 	},
 	serviceLocation: {
 		type: String,
