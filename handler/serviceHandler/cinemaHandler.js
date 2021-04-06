@@ -81,9 +81,7 @@ exports.getSpecificMovie = async(req, res, next) => {
 
 exports.updateMovie = async(req, res, next) => {
 	try {
-		let movieObj = await Movie.findOne({_id: req.params.movie_id});
 		modifiedMovie = {...req.body};
-		console.log(modifiedMovie);
 		await Movie.findOneAndUpdate({_id: req.params.movie_id}, {$set: modifiedMovie}, {upsert: true});
 		let updatedMovie = await Movie.findOne({_id: req.params.movie_id});
 		return res.status(200).send(updatedMovie);
