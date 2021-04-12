@@ -37,4 +37,4 @@ const createTicketValidator = function(data) {
 
 const Ticket = mongoose.model('Ticket', TicketSchema);
 
-module.exports = {Ticket}
+module.exports = {Ticket,createTicketValidator}

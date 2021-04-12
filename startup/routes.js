@@ -4,6 +4,8 @@ const moduleRoute = require("../route/Module");
 const deviceTwinRoute = require("../route/DeviceTwin")
 const identificationRoute = require("../route/Identification");
 const errorHandler = require("../handler/error");
+const bookingRoute = require('../route/Mobile_booking'); 
+
 
 module.exports = function (app) {
 	app.use(express.json());
@@ -16,7 +18,7 @@ module.exports = function (app) {
 
 	// route for sending code
 	app.use("/identification", identificationRoute);
-
+	app.use("/booking",bookingRoute)
 	//app error handler
 	app.use(errorHandler);
 }
