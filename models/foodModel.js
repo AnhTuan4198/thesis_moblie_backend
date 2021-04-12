@@ -1,8 +1,10 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
+const { Service } = require("./serviceModel")
 const {
 	Schema
 } = mongoose;
+
 
 const foodSchema = new Schema({
 	serviceId: {
@@ -49,6 +51,7 @@ const createFoodValidator = function(data) {
 	return result;
 }
 
-const Food = mongoose.model('Food', foodSchema);
+
+const Food = Service.discriminator('Food', foodSchema);
 
 module.exports = {Food, createFoodValidator}

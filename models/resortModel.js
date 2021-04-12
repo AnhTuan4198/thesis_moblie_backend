@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
+const { Service } =require("./serviceModel")
 const {
 	Schema
 } = mongoose;
@@ -9,20 +10,9 @@ const resortSchema = new Schema({
 		type: String,
 		require: true
 	},
-	ticketCode: {
-		type: String,
-		require: true
-	},
 	resortName: {
 		type: String,
 		require: true
-	},
-	room: {
-		type: String,
-		require: true
-	},
-	resortService: {
-		type: Array
 	},
 	createdAt: {
 		type: Date,
@@ -49,6 +39,6 @@ const registerResortValidator = function(data) {
 	return result;
 }
 
-const Resort = mongoose.model('Resort', resortSchema);
+const Resort = Service.discriminator('Resort', resortSchema);
 
 module.exports = {Resort, registerResortValidator}

@@ -4,17 +4,16 @@ const {
 	Schema
 } = mongoose;
 
+const schemaOptions = {
+	discriminatorKey:"serviceType"
+}
 const serviceSchema = new Schema({
 	serviceId: {
 		type: String,
 		require: true,
 		unique: true
 	},
-	serviceType: {
-		type: String,
-		require: true
-	},
-	availableTicket: {
+	availableTicketType: {
 		type: Array,
 		require: true
 	},
@@ -27,7 +26,7 @@ const serviceSchema = new Schema({
 		type: Number,
 		require: true
 	}
-});
+},schemaOptions);
 
 const createServiceValidator = function(data) {
 	const schema = Joi.object({
