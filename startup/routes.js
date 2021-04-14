@@ -4,6 +4,7 @@ const moduleRoute = require("../route/Module");
 const deviceTwinRoute = require("../route/DeviceTwin")
 const errorHandler = require("../handler/error");
 const movieRoute = require("../route/Movie");
+const foodRoute = require("../route/Food")
 
 module.exports = function (app) {
 	app.use(express.json());
@@ -15,6 +16,7 @@ module.exports = function (app) {
 	app.use("/module", moduleRoute);	
 
 	app.use("/movie", movieRoute);
+	app.use("/food", foodRoute);
 
 	//app error handler
 	app.use(errorHandler);

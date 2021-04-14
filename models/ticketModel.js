@@ -17,7 +17,7 @@ const TicketSchema = new Schema({
 	},
 	user: {
 		type: userSchema,
-		default: {}
+		ref: 'User'
 	},
 	startTime: {
 		type: Date,

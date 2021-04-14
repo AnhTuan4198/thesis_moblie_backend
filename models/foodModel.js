@@ -43,6 +43,7 @@ const createFoodValidator = function(data) {
 		foodName: Joi.string().required(),
 		foodKind: Joi.string().required(),
 		location: Joi.string().required(),
+		price: Joi.number(),
 		createdAt: Joi.date(),
 		createdBy: Joi.number().required()
 	})

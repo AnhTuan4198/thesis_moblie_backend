@@ -64,7 +64,13 @@ exports.createMovie = async(req, res, next) => {
 exports.getAllMovie = async(req, res, next) => {
 	try {
 		let allMovies = await Movie.find();
-		return res.status(200).send(allMovies);
+		let allMovieRes = allMovies.map((movie) => {
+			return {
+				movieId: movie._id,
+				movieName: movie.movieName
+			}
+		})
+		return res.status(200).send(allMovieRes);
 	} catch (error) {
 		return next(error);
 	}
@@ -72,7 +78,13 @@ exports.getAllMovie = async(req, res, next) => {
 
 exports.getSpecificMovie = async(req, res, next) => {
 	try {
-		let movie = await Movie.findOne({_id: req.params.movie_id});
+		let movie = await Movie.findOne({_id: req.params.movie_id}, {
+			serviceId: 1,
+			movieName: 1,
+			performanceTime: 1,
+			theater: 1,
+			availableSeat: 1
+		});
 		return res.status(200).send(movie);
 	} catch (error) {
 		return next(error);
