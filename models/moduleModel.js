@@ -12,7 +12,7 @@ const moduleSchema = new Schema({
 	},
 	serviceId: {
 		type: String,
-		default: " "
+		ref: 'Service'
 	},
 	gate: {
 		type: String,

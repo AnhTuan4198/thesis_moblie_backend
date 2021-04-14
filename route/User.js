@@ -7,7 +7,7 @@ const { register ,signIn } = require("../handler/auth");
 
 router.post('/register',register);
 
-router.post('/signin',signIn)
+router.post('/signin',signIn);
 
 
 module.exports = router;

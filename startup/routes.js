@@ -2,8 +2,9 @@ const express = require("express");
 const userRoute = require("../route/User");
 const moduleRoute = require("../route/Module");
 const deviceTwinRoute = require("../route/DeviceTwin")
-const identificationRoute = require("../route/Identification");
 const errorHandler = require("../handler/error");
+const movieRoute = require("../route/Movie");
+const foodRoute = require("../route/Food")
 
 module.exports = function (app) {
 	app.use(express.json());
@@ -12,10 +13,10 @@ module.exports = function (app) {
 	app.use("/auth", userRoute);
 
 	// route for IoT device
-	app.use("/module", moduleRoute);
+	app.use("/module", moduleRoute);	
 
-	// route for sending code
-	app.use("/identification", identificationRoute);
+	app.use("/movie", movieRoute);
+	app.use("/food", foodRoute);
 
 	//app error handler
 	app.use(errorHandler);
