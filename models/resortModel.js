@@ -8,7 +8,8 @@ const {
 const resortSchema = new Schema({
 	serviceId: {
 		type: String,
-		require: true
+		require: true,
+		ref: 'Service'
 	},
 	resortName: {
 		type: String,
