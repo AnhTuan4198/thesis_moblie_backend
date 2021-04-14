@@ -14,7 +14,26 @@ exports.updateIndividualDevice = async function (req,res,next){
         const twin = instance.responseBody;
 
         const patch = {...payload}
-
+        /**
+         * Patch format below 
+         * only: and new properties in to desired properties
+         */
+// var patch = {
+//            tags: {
+//              location: {
+//                plant: "hcmut",
+//              },
+//            },
+//            properties:{
+//              desired:{
+//                wifiConfig:{
+//                  ssid:'Anh Lua',
+//                  password:"74759306"
+//                },
+//                serviceId:"A2FAAA"
+//              }
+//            }
+//          };
         // twin.update(payload, immediately invoke)
         const feedback = await twin.update(patch);
         //return response here
