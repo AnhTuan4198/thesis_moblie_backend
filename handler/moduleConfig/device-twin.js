@@ -6,15 +6,18 @@ const twinService = iotHub.Registry.fromConnectionString(twinServiceKey);
 
 exports.updateIndividualDevice = async function (req,res,next){
     try{
-       
-        
-        const {deviceId , payload} = req.body;
+	const deviceId = req.params.module_id;
+	const payload = req.body;
 
         const instance = await twinService.getTwin(deviceId);
         const twin = instance.responseBody;
 
-        const patch = {...payload}
-        /**
+	const patch = {
+		properties:{
+			desired: {...payload}
+		}
+	};
+	/**
          * Patch format below 
          * only: and new properties in to desired properties
          */
@@ -36,14 +39,14 @@ exports.updateIndividualDevice = async function (req,res,next){
 //          };
         // twin.update(payload, immediately invoke)
         const feedback = await twin.update(patch);
-        //return response here
+        console.log(feedback);
+	//return response here
         return res.status(200).json({
             Message:"update device successfully",
             statusCode:"200"
         })
 
     }catch(err){
-        //console.log(err)
         return next(err.responseBody)
     }
 }
