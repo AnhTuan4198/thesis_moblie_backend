@@ -9,6 +9,10 @@ router.get('/', getAllModules);
 
 router.get('/iot-hub-registration',enrollmentRegister,deviceRegister, addModule);
 
-router.put('/:module_id', updateModuleService, updateIndividualDevice);
+// Update service for module
+router.put('/service/:module_id', updateModuleService, updateIndividualDevice);
+
+// Update wifi config
+router.put('/wifi/module_id', updateIndividualDevice);
 
 module.exports = router;
