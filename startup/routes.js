@@ -17,7 +17,7 @@ module.exports = function (app) {
 	app.use("/module", moduleRoute);	
 
 	// route for sending code
-	// app.use("/identification", identificationRoute);
+
 	app.use("/booking",bookingRoute)
 	app.use("/movie", movieRoute);
 	app.use("/food", foodRoute);

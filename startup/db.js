@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 module.exports = function(){
     mongoose
-      .connect("mongodb://db:27017/thesis_app", {
+      .connect("mongodb://localhost/thesis_app", {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       })
