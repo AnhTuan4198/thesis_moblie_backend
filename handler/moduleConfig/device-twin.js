@@ -39,7 +39,6 @@ exports.updateIndividualDevice = async function (req,res,next){
 //          };
         // twin.update(payload, immediately invoke)
         const feedback = await twin.update(patch);
-        console.log(feedback);
 	//return response here
         return res.status(200).json({
             Message:"update device successfully",

@@ -41,7 +41,7 @@ exports.updateModuleService = async(req, res, next) => {
 			statusCode: 404
 		});
 		await Module.findOneAndUpdate({
-			moduleId: req.params.moduleId
+			moduleId: req.params.module_id
 		}, {$set: {...req.body}}, {upsert: true});		
 
 		let updatedModule = await Module.findOne({moduleId: req.params.module_id});
