@@ -1,12 +1,6 @@
-const config = require("config");
-
-const {Module, updateModuleValidator} = require("../models/moduleModel");
+const {Module, updateModuleValidator} = require("../../models/moduleModel");
 
 exports.getAllModules = async (req, res, next) => {
-	if (req.get("secret_key") != config.get("secretKey")) return next({
-		message: "Unauthorized",
-		statusCode: 401
-	});
 	try {
 		let allModules = await Module.find();
 		return res.status(200).send(allModules);
@@ -34,34 +28,29 @@ exports.addModule = async(req, res, next) => {
 }
 
 exports.updateModuleService = async(req, res, next) => {
-	if (req.get("secret_key") != config.get("secretKey")) return next({
-		message: "Unauthorized",
-		statusCode: 401
-	});
-	const {
-		error
-	} =  updateModuleValidator(req.body);
-	if (error) return res.status(400).send(error.details[0].message);
-
 	try {
-		console.log(req.params.moduleId);
+		const {
+			error
+		} =  updateModuleValidator(req.body);
+		if (error) return res.status(400).send(error.details[0].message);
 		let existModule = await Module.findOne({
-			moduleId: req.params.moduleId
+			moduleId: req.params.module_id
 		});
 		if (!existModule) return next({
 			message: "Module does not exist",
 			statusCode: 404
 		});
-		await Module.updateOne({
-			moduleId: req.params.moduleId
+		await Module.findOneAndUpdate({
+			moduleId: req.params.module_id
 		}, {$set: {...req.body}}, {upsert: true});		
-		let updatedModule = await Module.findOne({moduleId: req.params.moduleId});
+
+		let updatedModule = await Module.findOne({moduleId: req.params.module_id});
 		const {
 			moduleId,
 			serviceId,
 			gate
 		} = updatedModule
-		return res.status(200).json({
+		return next() && res.status(200).json({
 			moduleId,
 			serviceId,
 			gate

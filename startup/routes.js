@@ -1,7 +1,6 @@
 const express = require("express");
 const userRoute = require("../route/User");
 const moduleRoute = require("../route/Module");
-const deviceTwinRoute = require("../route/DeviceTwin")
 const errorHandler = require("../handler/error");
 const bookingRoute = require('../route/Mobile_booking'); 
 
