@@ -11,6 +11,4 @@ RUN npm install
 COPY . .
 
 EXPOSE 3030/tcp
-CMD [ "nodemon" ]
-
-
+CMD [ "node", "index.js" ]
