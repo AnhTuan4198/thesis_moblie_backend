@@ -29,9 +29,10 @@ exports.addModule = async(req, res, next) => {
 
 exports.updateModuleService = async(req, res, next) => {
 	try {
+		let requestBody = {...req.body};
 		const {
 			error
-		} =  updateModuleValidator(req.body);
+		} =  updateModuleValidator(requestBody["serviceConfig"]);
 		if (error) return res.status(400).send(error.details[0].message);
 		let existModule = await Module.findOne({
 			moduleId: req.params.module_id
@@ -42,7 +43,7 @@ exports.updateModuleService = async(req, res, next) => {
 		});
 		await Module.findOneAndUpdate({
 			moduleId: req.params.module_id
-		}, {$set: {...req.body}}, {upsert: true});		
+		}, {$set: requestBody["serviceConfig"]}, {upsert: true});		
 
 		let updatedModule = await Module.findOne({moduleId: req.params.module_id});
 		const {
