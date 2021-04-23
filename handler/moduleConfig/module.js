@@ -46,16 +46,13 @@ exports.updateModuleService = async(req, res, next) => {
 		}, {$set: requestBody["serviceConfig"]}, {upsert: true});		
 
 		let updatedModule = await Module.findOne({moduleId: req.params.module_id});
-		const {
-			moduleId,
-			serviceId,
-			gate
-		} = updatedModule
-		return next() && res.status(200).json({
-			moduleId,
-			serviceId,
-			gate
-		});
+		let serviceConfig = {
+			serviceId: updatedModule.serviceId,
+			gate: updatedModule.gate
+		};
+		res.locals['moduleId'] = updatedModule.moduleId;
+		res.locals['serviceConfig'] = serviceConfig;
+		return next();
 	} catch(error) {
 		return next(error)
 	}
