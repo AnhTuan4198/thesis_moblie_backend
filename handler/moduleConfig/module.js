@@ -51,11 +51,7 @@ exports.updateModuleService = async(req, res, next) => {
 			serviceId,
 			gate
 		} = updatedModule
-		return next() && res.status(200).json({
-			moduleId,
-			serviceId,
-			gate
-		});
+		return next();
 	} catch(error) {
 		return next(error)
 	}
