@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3030;
 require('./startup/db')();
 require('./startup/config')();
 require('./startup/routes')(app);
-
+require('./startup/event-hub')();
 
 let key = config.get("privateKey");
     

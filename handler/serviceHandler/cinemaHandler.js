@@ -7,6 +7,7 @@ const { Ticket } = require('../../models/ticketModel');
 
 exports.cinemaVerifyTicket = async(identificationObj) => {
 	try {
+
 		let validService = await Service.findOne({
 			serviceId: {$eq: identificationObj.serviceId},
 			availableTicket: { $eq: identificationObj.ticketType}
@@ -28,9 +29,10 @@ exports.cinemaVerifyTicket = async(identificationObj) => {
 			ticketCode: identificationObj.ticketCode,
 			user: currentUser
 		});
+		console.log(newLog);
 		return newLog;
 	} catch(error) {
-		return next(error);
+		return error;
 	}
 }
 

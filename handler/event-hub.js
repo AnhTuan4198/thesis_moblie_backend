@@ -34,21 +34,30 @@ const roomHandler = (payload) => {
 	roomChecking(payload);
 }
 
-const eventHandler = function (messages, context) {
+const eventHandler = function (messages) {
 	for (const message of messages) {
-		console.log(message);
+		const splitTicket = message.body.toString().split('-');
+		const ticketCode=splitTicket[0];
+		const ticketType=splitTicket[1];
+		const serviceId=message.properties.service;
+		const payload = {
+			ticketCode,
+			ticketType,
+			serviceId
+		}
+		console.log(payload)
 		switch (message.properties.service) {
 			case "cinema":
-				cinemaHandler(message.properties);
+				cinemaHandler(payload);
 				break;
 			case "food":
-				foodHandler(message.properties);
+				foodHandler(payload);
 				break;
 			case "resort":
-				resortHandler(message.properties);
+				resortHandler(payload);
 				break;
 			case "room":
-				roomHandler(message.properties);
+				roomHandler(payload);
 				break;
 		}
 	}
@@ -71,4 +80,4 @@ async function receiveData() {
 	});
 }
 
-receiveData();
+module.exports = receiveData;
