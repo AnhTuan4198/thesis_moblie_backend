@@ -40,10 +40,12 @@ const eventHandler = function (messages) {
 		const ticketCode=splitTicket[0];
 		const ticketType=splitTicket[1];
 		const serviceId=message.properties.service;
+		const deviceId = message.systemProperties['iothub-connection-device-id'];
 		const payload = {
 			ticketCode,
 			ticketType,
-			serviceId
+			serviceId,
+			deviceId
 		}
 		console.log(payload)
 		switch (message.properties.service) {
