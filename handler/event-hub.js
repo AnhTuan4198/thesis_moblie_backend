@@ -12,11 +12,16 @@ const eventHubsCompatiblePath = "iothub-ehub-thesis-hcm-8910473-adb4d200a9";
 
 const iotHubSasKey = "NN2Pq5f9fXxWuiwzRCcV2ZhNE+8spTXK/1hEA9X/GTk=";
 
+const serviceConStr = "HostName=thesis-hcmut.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=NN2Pq5f9fXxWuiwzRCcV2ZhNE+8spTXK/1hEA9X/GTk="
+
 const connectionString = `Endpoint=${eventHubsCompatibleEndpoint};EntityPath=${eventHubsCompatiblePath};SharedAccessKeyName=service;SharedAccessKey=${iotHubSasKey}`;
 
 const {cinemaVerifyTicket} = require("./serviceHandler/cinemaHandler");
 const {foodVerifyTicket} = require("./serviceHandler/foodHandler");
 const {resortVerifyTicket, roomChecking} = require("./serviceHandler/resortHandler");
+
+
+
 
 const cinemaHandler = (payload) => {
 	cinemaVerifyTicket(payload);
@@ -41,15 +46,19 @@ const eventHandler = function (messages) {
 		const ticketType=splitTicket[1];
 		const serviceId=message.properties.service;
 		const deviceId = message.systemProperties['iothub-connection-device-id'];
+		console.log(`this is system properties:${message.systemProperties}`);
+		['iothub-connection-device-id'];
 		const payload = {
 			ticketCode,
 			ticketType,
 			serviceId,
-			deviceId
+			deviceId,
+			serviceKey:serviceConStr
 		}
 		console.log(payload)
 		switch (message.properties.service) {
 			case "cinema":
+				console.log("in cinema handler	")
 				cinemaHandler(payload);
 				break;
 			case "food":
