@@ -6,11 +6,6 @@ const {
 } = mongoose;
 
 const movieSchema = new Schema({
-	serviceId: {
-		type: String,
-		require: true,
-		ref: 'Service'
-	},
 	movieName: {
 		type: String,
 		require: true
@@ -26,27 +21,19 @@ const movieSchema = new Schema({
 	availableSeat: {
 		type: Number,
 		require: true
-	},
-	createdAt: {
-		type: Date,
-		require: false,
-		default: new Date()
-	},
-	createdBy: {
-		type: Number,
-		require: true
 	}
 });
 
 const createMovieValidator = function(data) {
 	const schema = Joi.object({
 		serviceId: Joi.string().required(),
+		availableTicker: Joi.array().required(),
+		createdAt: Joi.data().required(),
+		createdBy: Joi.number().required(),
 		movieName: Joi.string().required(),
 		performanceTime: Joi.date().required(),
 		theater: Joi.string().required(),
-		availableSeat: Joi.number().required(),
-		createdAt: Joi.date(),
-		createdBy: Joi.number().required()
+		availableSeat: Joi.number().required()
 	})
 	const result = schema.validate(data);
 	return result;

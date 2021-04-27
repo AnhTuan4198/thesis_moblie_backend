@@ -6,22 +6,8 @@ const {
 } = mongoose;
 
 const resortSchema = new Schema({
-	serviceId: {
-		type: String,
-		require: true,
-		ref: 'Service'
-	},
 	resortName: {
 		type: String,
-		require: true
-	},
-	createdAt: {
-		type: Date,
-		require: false,
-		default: new Date()
-	},
-	updatedBy: {
-		type: Number,
 		require: true
 	}
 });
@@ -29,13 +15,11 @@ const resortSchema = new Schema({
 const registerResortValidator = function(data) {
 	const schema = Joi.object({
 		serviceId: Joi.string().required(),
-		tickerCode: Joi.string().required(),
-		resortName: Joi.string.required(),
-		room: Joi.string().required(),
-		reportService: Joi.array(),
+		availableTicker: Joi.array().required(),
 		createdAt: Joi.data().required(),
-		createdBy: Joi.number().required()
-	})
+		createdBy: Joi.number().required(),
+		resortName: Joi.string.required(),
+	});
 	const result = schema.validate(data);
 	return result;
 }

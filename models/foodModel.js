@@ -7,12 +7,6 @@ const {
 
 
 const foodSchema = new Schema({
-	serviceId: {
-		type: String,
-		require: true,
-		unique: true,
-		ref: 'Service'
-	},
 	foodName: {
 		type: String,
 		require: true,
@@ -28,20 +22,15 @@ const foodSchema = new Schema({
 	price: {
 		type: Number,
 		require: true
-	},
-	createdAt: {
-		type: Date,
-		default: new Date()
-	},
-	createdBy: {
-		type: Number,
-		require: true
 	}
 });
 
 const createFoodValidator = function(data) {
 	const schema = Joi.object({
 		serviceId: Joi.string().required(),
+		availableTicker: Joi.array().required(),
+		createdAt: Joi.data().required(),
+		createdBy: Joi.number().required(),
 		foodName: Joi.string().required(),
 		foodKind: Joi.string().required(),
 		location: Joi.string().required(),

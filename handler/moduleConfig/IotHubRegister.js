@@ -70,7 +70,8 @@ exports.deviceRegister = async function(req,res,next ){
         const response = await provisioningClient.register();
         const deviceConnectionString = `HostName=${response.assignedHub};DeviceId=${response.deviceId};SharedAccessKey=${symmetricKey}`;
         return res.status(200).json({
-            connection_string:deviceConnectionString
+		device_id: response.deviceId,
+		connection_string:deviceConnectionString
         }) && next();
     } catch (error) {
         return next(error.result)

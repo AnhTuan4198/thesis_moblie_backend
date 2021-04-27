@@ -9,7 +9,7 @@ router.get("/:service_id", getSpecificService);
 
 router.post("/", createService);
 
-router.pu("/:service_id", updateService);
+router.put("/:service_id", updateService);
 
 router.delete("/:service_id", deleteService);
 
