@@ -1,27 +1,62 @@
+const Client = require('azure-iothub').Client;
+const Message = require("azure-iot-common").Message;
+const  errorHandler = require('../error');
+
+
 const {Food, createFoodValidator} = require('../../models/foodModel');
 const { Service } = require('../../models/serviceModel');
 
 exports.foodVerifyTicket = async(identificationObj) => {
 	try {
+
+		const {serviceId,deviceId,ticketCode,ticketType,serviceKey} = identificationObj;
+
+		const service = Client.fromConnectionString(serviceKey);
+
 		let validService = await Service.findOne({
-			serviceId: {$eq: identificationObj.serviceId},
-			availableTicket: { $eq: identificationObj.ticketType}
+			serviceId: {$eq: serviceId},
+			availableTicket: { $eq: ticketType}
 		});
-		if (!validService) return next({
+		if (!validService) return errorHandler({
 			message: "Unavailable service for this user",
 			status: 403
 		});
 		// Custom implement for food service
 		
-		let currentUser = await Ticket.findOne({ticketCode: identificationObj.ticketCode}).user;
+		let currentUser = await Ticket.findOne({ticketCode: ticketCode}).user;
 		// log history
 		let newLog = await History.create({
 			serviceId: validService.serviceId,
 			serviceType: validService.serviceType,
-			ticketCode: identificationObj,ticketCode,
+			ticketCode:ticketCode,
 			user: currentUser
 		});
-		return newLog;
+
+		service.open(function (err){	
+			if(err){
+				return errorHandler({
+					message:"Cannot connect to device" + err.message
+				})
+			}else{
+				const message = new Message(
+					JSON.stringify({
+						message: "Validate success!",
+						open:true
+					})
+				)
+				service.send(deviceId,message,function (err) {
+					if(err){
+						console.log(`message sent `)
+						return err.toString();
+					}
+					else{
+						console.log("message sent: "+message.getData())
+						// process.exit(0)
+						return newLog
+					}
+				})
+			}
+		})
 	} catch(error) {
 		return next();
 	}
