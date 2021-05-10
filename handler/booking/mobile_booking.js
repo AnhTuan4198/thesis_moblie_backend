@@ -4,7 +4,7 @@ const _ =require("lodash");
 
 exports.booking = async (req,res,next)=> {
     const payload = req.body;
-    const { startDate , endDate ,ticketTier, numCustomer } = payload;
+    const { userId,startDate , endDate ,ticketTier, numCustomer } = payload;
  
     const startTime = new Date(startDate.dateString);
     const endTime =new Date(endDate.dateString);
@@ -16,7 +16,8 @@ exports.booking = async (req,res,next)=> {
                 startTime,
                 endTime,
                 ticketType:ticketTier,
-                ticketCode
+                ticketCode,
+                user:userId
             }
             const {error} = createTicketValidator(ticketInstance)
             if( error ) return next({

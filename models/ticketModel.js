@@ -16,7 +16,7 @@ const TicketSchema = new Schema({
 		require: true
 	},
 	user: {
-		type: userSchema,
+		type: Schema.Types.ObjectId,
 		ref: 'User'
 	},
 	startTime: {

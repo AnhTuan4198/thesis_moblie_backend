@@ -57,14 +57,14 @@ const eventHandler = function (messages) {
 		}
 		console.log(payload)
 		switch (message.properties.service) {
-			case "cinema":
+			case "Cinema":
 				console.log("in cinema handler	")
 				cinemaHandler(payload);
 				break;
-			case "food":
+			case "Food":
 				foodHandler(payload);
 				break;
-			case "resort":
+			case "Resort":
 				resortHandler(payload);
 				break;
 			case "room":
