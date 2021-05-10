@@ -13,6 +13,6 @@ router.get('/iot-hub-registration',enrollmentRegister,deviceRegister, addModule)
 router.put('/service/:module_id', updateModuleService, updateDeviceService);
 
 // Update wifi config
-router.put('/wifi/module_id', updateIndividualDevice);
+router.put('/wifi/:module_id', updateIndividualDevice);
 
 module.exports = router;

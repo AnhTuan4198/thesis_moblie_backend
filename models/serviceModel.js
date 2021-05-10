@@ -1,32 +1,33 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
-const {
-	Schema
-} = mongoose;
+const { Schema } = mongoose;
 
 const schemaOptions = {
-	discriminatorKey:"serviceType"
-}
-const serviceSchema = new Schema({
-	serviceId: {
-		type: String,
-		require: true,
-		unique: true
-	},
-	availableTicketType: {
-		type: Array,
-		require: true
-	},
-	createdAt: {
-		type: Date,
-		require: false,
-		default: new Date()
-	},
-	createdBy: {
-		type: Number,
-		require: true
-	}
-},schemaOptions);
+  discriminatorKey: "serviceType",
+};
+const serviceSchema = new Schema(
+  {
+    serviceName: {
+      type: String,
+      require: true,
+      unique: true,
+    },
+    availableTicketType: {
+      type: Array,
+      require: true,
+    },
+    createdAt: {
+      type: Date,
+      require: false,
+      default: new Date(),
+    },
+    createdBy: {
+      type: Number,
+      require: true,
+    },
+  },
+  schemaOptions
+);
 
 const createServiceValidator = function(data) {
 	const schema = Joi.object({
@@ -39,6 +40,6 @@ const createServiceValidator = function(data) {
 	return result;
 }
 
-const Service = mongoose.model('Service', serviceSchema);
+const Service = mongoose.model("Service", serviceSchema);
 
-module.exports = {Service, createServiceValidator}
+module.exports = { Service, createServiceValidator };

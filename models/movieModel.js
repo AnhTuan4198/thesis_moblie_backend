@@ -1,9 +1,7 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
 const { Service } = require("./serviceModel");
-const {
-	Schema
-} = mongoose;
+const { Schema } = mongoose;
 
 const movieSchema = new Schema({
 	movieName: {
@@ -26,10 +24,6 @@ const movieSchema = new Schema({
 
 const createMovieValidator = function(data) {
 	const schema = Joi.object({
-		serviceId: Joi.string().required(),
-		availableTicker: Joi.array().required(),
-		createdAt: Joi.data().required(),
-		createdBy: Joi.number().required(),
 		movieName: Joi.string().required(),
 		performanceTime: Joi.date().required(),
 		theater: Joi.string().required(),
@@ -39,6 +33,6 @@ const createMovieValidator = function(data) {
 	return result;
 }
 
-const Movie = Service.discriminator('Movie', movieSchema);
+const Movie = Service.discriminator("Movie", movieSchema);
 
-module.exports = {Movie, createMovieValidator}
+module.exports = { Movie, createMovieValidator };
