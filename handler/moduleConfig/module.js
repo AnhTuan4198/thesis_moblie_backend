@@ -9,24 +9,26 @@ exports.getAllModules = async (req, res, next) => {
   }
 };
 
-exports.addModule = async (req, res, next) => {
-  try {
-    let existModule = await Module.findOne({
-      moduleId: res.locals.deviceId,
-    });
-    if (existModule)
-      return next({
-        message: "Module already exists",
-        statusCode: 400,
-      });
-    let newModule = await Module.create({
-      moduleId: res.locals.deviceId,
-    });
-    return next();
-  } catch (error) {
-    return next(error);
-  }
-};
+exports.addModule = async(req, res, next) => {
+	try {
+		let existModule = await Module.findOne({
+			moduleId: res.locals.deviceId
+		});
+		if (existModule) return next({
+			message: "Module already exists",
+			statusCode: 400
+		});
+		let newModule = await Module.create({
+			moduleId: res.locals.deviceId
+		});
+		return res.status(200).json({
+			device_id: res.locals.deviceId,
+			connection_string: res.locals.deviceConnectionString
+		});
+	} catch (error) {
+		return next(error);
+	}
+}
 
 exports.updateModuleService = async (req, res, next) => {
   try {

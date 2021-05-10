@@ -4,51 +4,35 @@ const { Service } = require("./serviceModel");
 const { Schema } = mongoose;
 
 const foodSchema = new Schema({
-  serviceName: {
-    type: String,
-    require: true,
-    unique: true,
-    ref: "Service",
-  },
-  foodName: {
-    type: String,
-    require: true,
-  },
-  foodKind: {
-    type: String,
-    require: true,
-  },
-  location: {
-    type: String,
-    require: true,
-  },
-  price: {
-    type: Number,
-    require: true,
-  },
-  createdAt: {
-    type: Date,
-    default: new Date(),
-  },
-  createdBy: {
-    type: Number,
-    require: true,
-  },
+	foodName: {
+		type: String,
+		require: true,
+	},
+	foodKind: {
+		type: String,
+		require: true,
+	},
+	location: {
+		type: String,
+		require: true
+	},
+	price: {
+		type: Number,
+		require: true
+	}
 });
 
-const createFoodValidator = function (data) {
-  const schema = Joi.object({
-    serviceName: Joi.string().required(),
-    foodName: Joi.string().required(),
-    foodKind: Joi.string().required(),
-    location: Joi.string().required(),
-    price: Joi.number(),
-    createdAt: Joi.date(),
-    createdBy: Joi.number().required(),
-  });
-  const result = schema.validate(data);
-  return result;
-};
+const createFoodValidator = function(data) {
+	const schema = Joi.object({
+		foodName: Joi.string().required(),
+		foodKind: Joi.string().required(),
+		location: Joi.string().required(),
+		price: Joi.number()
+	})
+	const result = schema.validate(data);
+	return result;
+}
+
 
 const Food = Service.discriminator("Food", foodSchema);
 
