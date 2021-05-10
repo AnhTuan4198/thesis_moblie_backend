@@ -4,15 +4,10 @@ const _ =require("lodash");
 
 exports.booking = async (req,res,next)=> {
     const payload = req.body;
-    console.log(`payload: ${payload}`)
     const { startDate , endDate ,ticketTier, numCustomer } = payload;
-    // console.log(`startTime ${startDate}`);
-    // console.log(`endTime: ${endDate}`);
  
     const startTime = new Date(startDate.dateString);
     const endTime =new Date(endDate.dateString);
-    console.log(`startTime ${startTime}`);
-    console.log(`endTime: ${endTime}`);
     try {
         let tickets =[];
         for(let i = 0; i<numCustomer; i++){

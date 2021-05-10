@@ -44,14 +44,14 @@ const eventHandler = function (messages) {
 		const splitTicket = message.body.toString().split('-');
 		const ticketCode=splitTicket[0];
 		const ticketType=splitTicket[1];
-		const serviceId=message.properties.service;
+		const serviceName = message.properties.service;
 		const deviceId = message.systemProperties['iothub-connection-device-id'];
 		console.log(`this is system properties:${message.systemProperties}`);
 		['iothub-connection-device-id'];
 		const payload = {
 			ticketCode,
 			ticketType,
-			serviceId,
+			serviceName,
 			deviceId,
 			serviceKey:serviceConStr
 		}
