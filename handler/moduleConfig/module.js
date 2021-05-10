@@ -21,7 +21,10 @@ exports.addModule = async(req, res, next) => {
 		let newModule = await Module.create({
 			moduleId: res.locals.deviceId
 		});
-		return next();
+		return res.status(200).json({
+			device_id: res.locals.deviceId,
+			connection_string: res.locals.deviceConnectionString
+		});
 	} catch (error) {
 		return next(error);
 	}

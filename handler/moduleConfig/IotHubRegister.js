@@ -25,7 +25,6 @@ exports.enrollmentRegister = async function (req,res,next) {
 		message: "Unauthorized",
 		statusCode: 401
 	});
-    console.log(ProvisionServiceConnectionString);
 	try {
 		const provisionService = await ProvisioningServiceClient.fromConnectionString(ProvisionServiceConnectionString);
 		
@@ -51,7 +50,6 @@ exports.enrollmentRegister = async function (req,res,next) {
 exports.deviceRegister = async function(req,res,next ){
     try {
         const payload = res.locals;
-        console.log(`payload : ${payload}`)
         const registrationId = payload.registrationId;
         const symmetricKey = payload.attestation.symmetricKey.primaryKey;
 
@@ -68,12 +66,12 @@ exports.deviceRegister = async function(req,res,next ){
         )
 
         const response = await provisioningClient.register();
-        console.log(`This is response form azure: ${response}`)
         const deviceConnectionString = `HostName=${response.assignedHub};DeviceId=${response.deviceId};SharedAccessKey=${symmetricKey}`;
-        return res.status(200).json({
-            deviceId:response.deviceId,
-            connection_string:deviceConnectionString
-        }) && next();
+	res.locals = {
+		deviceId: response.deviceId,
+		deviceConnectionString	
+	}
+	return next();
     } catch (error) {
         return next(error.result)
     }
