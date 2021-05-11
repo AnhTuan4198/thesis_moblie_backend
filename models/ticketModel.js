@@ -34,7 +34,8 @@ const createTicketValidator = function(data) {
 		ticketCode: Joi.string().required(),
 		ticketType: Joi.string().required(),
 		startTime: Joi.date().required(),
-		endTime: Joi.date().required()
+		endTime: Joi.date().required(),
+		user:Joi.required()
 	})
 	const result = schema.validate(data);
 	return result;
