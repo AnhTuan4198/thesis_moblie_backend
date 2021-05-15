@@ -65,10 +65,10 @@ const eventHandler = function (messages) {
 				console.log("in cinema handler	")
 				cinemaHandler(payload);
 				break;
-			case "food":
+			case "Food":
 				foodHandler(payload);
 				break;
-			case "resort":
+			case "Resort":
 				resortHandler(payload);
 				break;
 			case "room":
