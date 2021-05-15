@@ -16,6 +16,11 @@ const serviceSchema = new Schema(
       type: Array,
       require: true,
     },
+    updateAt:{
+      type:Date,
+      require:true,
+      default: new Date()
+    },
     createdAt: {
       type: Date,
       require: false,
@@ -24,6 +29,7 @@ const serviceSchema = new Schema(
     createdBy: {
       type: Number,
       require: true,
+      default: 1
     },
   },
   schemaOptions
@@ -31,9 +37,10 @@ const serviceSchema = new Schema(
 
 const createServiceValidator = function(data) {
 	const schema = Joi.object({
-		serviceId: Joi.string().required(),
+		serviceName: Joi.string().required(),
 		availableTicker: Joi.array().required(),
-		createdAt: Joi.data().required(),
+		createdAt: Joi.date().required(),
+    updatedAt: Joi.date().required(),
 		createdBy: Joi.number().required()
 	})
 	const result = schema.validate(data);
