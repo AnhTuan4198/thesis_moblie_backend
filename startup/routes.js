@@ -18,7 +18,7 @@ module.exports = function (app) {
 	app.use("/service", serviceRoute);
 
 	// route for IoT device
-	app.use("/module", moduleRoute);	
+	app.use("/api/modules", moduleRoute);	
 
 	// route for sending code
 

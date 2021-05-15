@@ -1,5 +1,5 @@
 const { Module, updateModuleValidator } = require("../../models/moduleModel");
-
+const {generateQuery} = require('../../helper/query');
 exports.getAllModules = async (req, res, next) => {
   try {
     let allModules = await Module.find();
@@ -8,6 +8,36 @@ exports.getAllModules = async (req, res, next) => {
     return next(error);
   }
 };
+
+
+
+exports.getModules = async (req,res,next) =>{
+  try{
+    console.log(`this is query: ${JSON.stringify(req.query)}`)
+    const {current,pageSize} = req.query;
+    const size = parseInt(pageSize,10);
+    const currentPage = parseInt(current,10)
+    const skipItems = (size-1)*currentPage;
+
+    const list = await Module.find().skip(skipItems).limit(size);
+    const total = await Module.countDocuments();
+    console.log(list)
+
+
+    const result = {
+    data: list,
+    total,
+    success: true,
+    pageSize:size,
+    current: currentPage || 1,
+  };
+  return res.status(200).json(result);
+
+  }catch (error){
+    console.log(error)
+    return next(error)
+  }
+}
 
 exports.addModule = async(req, res, next) => {
 	try {
