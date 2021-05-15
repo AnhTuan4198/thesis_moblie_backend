@@ -55,6 +55,7 @@ exports.updateModuleService = async (req, res, next) => {
       moduleId: req.params.module_id,
     });
     let serviceConfig = {
+	service_type: requestBody.serviceConfig.serviceType,
       service_name: updatedModule.serviceName,
       gate: updatedModule.gate,
     };

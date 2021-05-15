@@ -25,6 +25,7 @@ const moduleSchema = new Schema({
 
 const updateModuleValidator = function (data) {
   const schema = Joi.object({
+	serviceType: Joi.string(),
     serviceName: Joi.string(),
     gate: Joi.string(),
   });

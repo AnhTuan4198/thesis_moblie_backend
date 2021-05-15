@@ -34,14 +34,16 @@ exports.updateIndividualDevice = async function (req, res, next) {
 exports.updateDeviceService = async function (req, res, next) {
 	try {
 		const deviceId = res.locals.moduleId;
-		const payload = res.locals;
+		const payload = res.locals.serviceConfig;
 		const instance = await twinService.getTwin(deviceId);
 		const twin = instance.responseBody;
 
 		const patch = {
 			properties: {
 				desired: {
-					...payload
+					serviceConfig: {
+						...payload
+					}
 				}
 			}
 		};

@@ -44,19 +44,23 @@ const eventHandler = function (messages) {
 		const splitTicket = message.body.toString().split('-');
 		const ticketCode=splitTicket[0];
 		const ticketType=splitTicket[1];
-		const serviceName = message.properties.service;
+		const serviceName = message.properties.serviceName;
+		const serviceType = message.properties.serviceType;
+		const gate = message.properties.gate;
 		const deviceId = message.systemProperties['iothub-connection-device-id'];
-		console.log(`this is system properties:${message.systemProperties}`);
+		console.log(message.properties);
 		['iothub-connection-device-id'];
 		const payload = {
 			ticketCode,
 			ticketType,
 			serviceName,
+			serviceType,
+			gate,
 			deviceId,
 			serviceKey:serviceConStr
 		}
 		console.log(payload)
-		switch (message.properties.service) {
+		switch (message.properties.serviceType) {
 			case "cinema":
 				console.log("in cinema handler	")
 				cinemaHandler(payload);
