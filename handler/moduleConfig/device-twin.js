@@ -50,7 +50,7 @@ exports.updateDeviceService = async function (req, res, next) {
 		const feedback = await twin.update(patch);
 		//return response here
 		return res.status(200).json({
-			Message: "update device successfully",
+			Message: "Update device successfully",
 			statusCode: "200"
 		})
 

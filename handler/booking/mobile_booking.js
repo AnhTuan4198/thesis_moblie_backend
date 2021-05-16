@@ -4,7 +4,7 @@ const _ =require("lodash");
 
 exports.booking = async (req,res,next)=> {
     const payload = req.body;
-    console.log(payload);
+    // console.log(payload);
     const { userId,startDate , endDate ,ticketTier, numCustomer } = payload;
  
     const startTime = new Date(startDate.dateString);

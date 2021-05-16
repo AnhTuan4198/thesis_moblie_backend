@@ -12,7 +12,6 @@ const genDevices = (max)=>{
   for (let i = 0; i < max; i += 1) {
     tableListDataSource.push({
       moduleId: shortid.generate(),
-      serviceName: exampleList[Math.ceil(Math.random()*9)],
       gate:parseInt(Math.ceil(Math.random()*100),10),
       updatedAt: new Date(),
       createdAt: new Date(),

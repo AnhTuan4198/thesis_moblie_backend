@@ -9,13 +9,19 @@ const moduleSchema = new Schema({
     unique: true,
   },
   serviceName: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: "Service",
   },
   gate: {
     type: String,
     default: " ",
   },
+  updateAt:{
+    type: Date,
+    require: false,
+    default: new Date()
+  },
+
   createdAt: {
     type: Date,
     require: false,
@@ -25,9 +31,9 @@ const moduleSchema = new Schema({
 
 const updateModuleValidator = function (data) {
   const schema = Joi.object({
-	serviceType: Joi.string(),
-    serviceName: Joi.string(),
+    serviceName:Joi.string().required(),
     gate: Joi.string(),
+    updatedAt: Joi.date(),
   });
   const result = schema.validate(data);
   return result;

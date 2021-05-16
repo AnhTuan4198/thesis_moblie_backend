@@ -1,5 +1,6 @@
 const { Module, updateModuleValidator } = require("../../models/moduleModel");
 const {generateQuery} = require('../../helper/query');
+const { Service } = require("../../models/serviceModel");
 exports.getAllModules = async (req, res, next) => {
   try {
     let allModules = await Module.find();
@@ -13,15 +14,15 @@ exports.getAllModules = async (req, res, next) => {
 
 exports.getModules = async (req,res,next) =>{
   try{
-    console.log(`this is query: ${JSON.stringify(req.query)}`)
+    // console.log(`this is query: ${JSON.stringify(req.query)}`)
     const {current,pageSize} = req.query;
     const size = parseInt(pageSize,10);
     const currentPage = parseInt(current,10)
     const skipItems = (size-1)*currentPage;
 
-    const list = await Module.find().skip(skipItems).limit(size);
+    const list = await Module.find().populate('serviceName','serviceName').skip(skipItems).limit(size);
     const total = await Module.countDocuments();
-    console.log(list)
+    // console.log(list)
 
 
     const result = {
@@ -63,34 +64,47 @@ exports.addModule = async(req, res, next) => {
 exports.updateModuleService = async (req, res, next) => {
   try {
     let requestBody = { ...req.body };
+    console.log(requestBody);
     const { error } = updateModuleValidator(requestBody["serviceConfig"]);
     if (error) return res.status(400).send(error.details[0].message);
+   
     let existModule = await Module.findOne({
       moduleId: req.params.module_id,
     });
+    
     if (!existModule)
       return next({
         message: "Module does not exist",
         statusCode: 404,
       });
-    await Module.findOneAndUpdate(
+    
+       let existService = await Service.findOne({serviceName:requestBody["serviceConfig"].serviceName});
+
+      if(!existService)
+        return next({
+        message: "Service does not exist",
+        statusCode: 404,
+      });
+      console.log(existService);
+      await Module.findOneAndUpdate(
       {
         moduleId: req.params.module_id,
       },
-      { $set: requestBody["serviceConfig"] },
-      { upsert: true }
+      { $set:{ ...requestBody["serviceConfig"],serviceName:existService._id} },
+      { upsert: true ,useFindAndModify: false}
     );
 
     let updatedModule = await Module.findOne({
       moduleId: req.params.module_id,
     });
     let serviceConfig = {
-	service_type: requestBody.serviceConfig.serviceType,
       service_name: updatedModule.serviceName,
       gate: updatedModule.gate,
+      service_type:existService.serviceType
     };
     res.locals["moduleId"] = updatedModule.moduleId;
     res.locals["serviceConfig"] = serviceConfig;
+    console.log(`end`)
     return next();
   } catch (error) {
     return next(error);
