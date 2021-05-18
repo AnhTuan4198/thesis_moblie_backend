@@ -48,8 +48,6 @@ const eventHandler = function (messages) {
 		const serviceType = message.properties.serviceType;
 		const gate = message.properties.gate;
 		const deviceId = message.systemProperties['iothub-connection-device-id'];
-		console.log(message.properties);
-		['iothub-connection-device-id'];
 		const payload = {
 			ticketCode,
 			ticketType,
@@ -59,9 +57,8 @@ const eventHandler = function (messages) {
 			deviceId,
 			serviceKey:serviceConStr
 		}
-		console.log(payload)
 		switch (message.properties.serviceType) {
-			case "cinema":
+			case "Cinema":
 				console.log("in cinema handler	")
 				cinemaHandler(payload);
 				break;
@@ -71,7 +68,7 @@ const eventHandler = function (messages) {
 			case "Resort":
 				resortHandler(payload);
 				break;
-			case "room":
+			case "Room":
 				roomHandler(payload);
 				break;
 		}
