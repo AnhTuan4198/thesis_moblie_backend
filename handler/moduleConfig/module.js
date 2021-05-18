@@ -96,10 +96,9 @@ exports.updateModuleService = async (req, res, next) => {
 
     let updatedModule = await Module.findOne({
       moduleId: req.params.module_id,
-    });
-    console.log(`here`)
+    }).populate("serviceName");
     let serviceConfig = {
-      service_name: updatedModule.serviceName,
+      service_name: updatedModule.serviceName.serviceName,
       gate: updatedModule.gate,
       service_type:existService.serviceType
     };

@@ -38,9 +38,10 @@ const serviceSchema = new Schema(
 const createServiceValidator = function(data) {
 	const schema = Joi.object({
 		serviceName: Joi.string().required(),
-		availableTicker: Joi.array().required(),
-		createdAt: Joi.date().required(),
-    updatedAt: Joi.date().required(),
+		serviceType: Joi.string(),
+		availableTicketType: Joi.array().required(),
+		createdAt: Joi.date(),
+    		updatedAt: Joi.date(),
 		createdBy: Joi.number().required()
 	})
 	const result = schema.validate(data);

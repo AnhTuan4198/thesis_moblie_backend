@@ -40,10 +40,10 @@ exports.createService = async (req, res, next) => {
     if (error) return res.status(400).send(error.details[0].message);
 
     let newService = await Service.create({ ...req.body });
-    const { serviceName, availableTicket } = newService;
+    const { serviceName, availableTicketType, createdBy } = newService;
     return res.status(200).json({
       serviceName,
-      availableTicket,
+      availableTicketType,
       createdBy,
     });
   } catch (error) {
