@@ -63,3 +63,24 @@ exports.signIn = async (req, res, next) => {
     });
   }
 };
+
+exports.updateNotificationsToken = async (req,res,next)=>{
+  console.log(req.body);
+  const {userId,notificationToken} = req.body;
+  try{
+    const updatedUser = await User.findByIdAndUpdate({_id:userId},{
+      $set:{notificationToken}
+    },{
+      new:true
+    })
+    
+    const resPayload={
+      email:updatedUser.email,
+      id:updatedUser.id,
+      notificationToken:updatedUser.notificationToken,
+    }
+    return res.status(201).json(resPayload)
+  }catch(e){
+    return next(e)
+  }
+}

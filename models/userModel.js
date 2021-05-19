@@ -42,6 +42,9 @@ const userSchema = new Schema({
   },
   address:{
       type:String
+  },
+  notificationToken:{
+    type:String
   }
 });
 
