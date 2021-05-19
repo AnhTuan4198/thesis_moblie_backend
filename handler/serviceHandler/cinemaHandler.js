@@ -36,10 +36,9 @@ exports.cinemaVerifyTicket = async (identificationObj) => {
     let currentUser = await Ticket.findOne({ ticketCode: ticketCode }).user;
     // log history
     let newLog = await History.create({
-      serviceName: validService.serviceName,
-      serviceType: validService.serviceType,
+      serviceName: validService._id,
       ticketCode: identificationObj.ticketCode,
-      user: currentUser,
+      user: currentUser._id
     });
 
     // Open connection to the device

@@ -3,13 +3,9 @@ const { Schema } = mongoose;
 
 const historySchema = new Schema({
   serviceName: {
-    type: String,
+    type: Schema.Types.ObjectId,
     require: true,
     ref: "Service",
-  },
-  serviceType: {
-    type: String,
-    require: true,
   },
   ticketCode: {
     type: String,
@@ -20,7 +16,9 @@ const historySchema = new Schema({
     default: new Date(),
   },
   user: {
-    type: Object,
+    type: Object, type: Schema.Types.ObjectId,
+    require: true,
+    ref: "User",
   },
 });
 

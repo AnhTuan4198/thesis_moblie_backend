@@ -16,6 +16,7 @@ const serviceSchema = new Schema(
       type: Array,
       require: true,
     },
+    
     updateAt:{
       type:Date,
       require:true,
@@ -31,6 +32,10 @@ const serviceSchema = new Schema(
       require: true,
       default: 1
     },
+    location:[{
+        type:Schema.Types.ObjectId,
+        ref:"Locations"
+    }]
   },
   schemaOptions
 );

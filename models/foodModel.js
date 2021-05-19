@@ -1,6 +1,5 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
-const { Service } = require("./serviceModel");
 const { Schema } = mongoose;
 
 const foodSchema = new Schema({
@@ -12,10 +11,6 @@ const foodSchema = new Schema({
 		type: String,
 		require: true,
 	},
-	location: {
-		type: String,
-		require: true
-	},
 	price: {
 		type: Number,
 		require: true
@@ -26,7 +21,6 @@ const createFoodValidator = function(data) {
 	const schema = Joi.object({
 		foodName: Joi.string().required(),
 		foodKind: Joi.string().required(),
-		location: Joi.string().required(),
 		price: Joi.number()
 	})
 	const result = schema.validate(data);
@@ -34,6 +28,6 @@ const createFoodValidator = function(data) {
 }
 
 
-const Food = Service.discriminator("Food", foodSchema);
+const Food = mongoose.model("FoodItems", foodSchema);
 
 module.exports = { Food, createFoodValidator };
