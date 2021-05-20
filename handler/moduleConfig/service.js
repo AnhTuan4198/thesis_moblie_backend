@@ -5,14 +5,24 @@ const {
 
 exports.getAllService = async (req, res, next) => {
   try {
-    let allService = await Service.find();
-    let allServiceRes = allService.map((service) => {
-      return {
-        serviceName: service.serviceName,
-        availableTicketType: service.availableTicketType,
-      };
-    });
-    return res.status(200).send(allServiceRes);
+    const {current ,pageSize,serviceType} = req.query;
+    console.log(serviceType);
+    const size = parseInt(pageSize,10);
+    const currentPage = parseInt(current,10)
+    const skipItems = (currentPage-1)*size;
+    let allService = await Service.find({serviceType:serviceType}).skip(skipItems).limit(size);
+
+    console.log(allService);
+
+    const total = await Service.find({serviceType:serviceType}).countDocuments();
+    const result = {
+      data: allService,
+      total,
+      success: true,
+      pageSize:size,
+      current: currentPage || 1,
+    }
+    return res.status(200).send(result);
   } catch (error) {
     return next(error);
   }
@@ -20,14 +30,16 @@ exports.getAllService = async (req, res, next) => {
 
 exports.getSpecificService = async (req, res, next) => {
   try {
+    //  console.log(req.query)
     let service = await Service.findOne(
-      { serviceName: req.params.service_id },
+      { _id: req.params.service_id },
       {
         serviceName: 1,
         availableTicket: 1,
         createdBy: 1,
       }
-    );
+    ).populate("subService");
+    console.log(service)
     return res.status(200).send(service);
   } catch (error) {
     return next(error);

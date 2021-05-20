@@ -15,7 +15,7 @@ module.exports = function (app) {
 	// all route for user
 	app.use("/auth", userRoute);
 
-	app.use("/service", serviceRoute);
+	app.use("/api/services", serviceRoute);
 
 	// route for IoT device
 	app.use("/api/modules", moduleRoute);

@@ -1,6 +1,5 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
-const { Service } = require("./serviceModel");
 const { Schema } = mongoose;
 
 const movieSchema = new Schema({
@@ -33,6 +32,6 @@ const createMovieValidator = function(data) {
 	return result;
 }
 
-const Movie = Service.discriminator("Movie", movieSchema);
+const Movie = mongoose.model("Movie", movieSchema);
 
 module.exports = { Movie, createMovieValidator };

@@ -1,16 +1,14 @@
-
 const mongoose = require("mongoose");
 const { Service } = require("./serviceModel");
 const { Schema } = mongoose;
 
-const foodServiceSchema = new Schema({
+const cinemaServiceSchema = new Schema({
 	subService:[{
         type:Schema.Types.ObjectId,
-        ref:"FoodItems"
+        ref:"Movie"
     }]
 });
 
 
-const FoodService = Service.discriminator("Food", foodServiceSchema);
-
-module.exports = { FoodService};
+const CinemaService = Service.discriminator("Cinema", cinemacinemaServiceSchema);
+module.exports = { CinemaService};

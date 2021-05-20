@@ -14,11 +14,11 @@ exports.getAllModules = async (req, res, next) => {
 
 exports.getModules = async (req,res,next) =>{
   try{
-    // console.log(`this is query: ${JSON.stringify(req.query)}`)
+    console.log(`this is query: ${JSON.stringify(req.query)}`)
     const {current,pageSize} = req.query;
     const size = parseInt(pageSize,10);
     const currentPage = parseInt(current,10)
-    const skipItems = (size-1)*currentPage;
+    const skipItems = (currentPage-1)*size;
 
     const list = await Module.find().populate('serviceName','serviceName').skip(skipItems).limit(size);
     const total = await Module.countDocuments();
