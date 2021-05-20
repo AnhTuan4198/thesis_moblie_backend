@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3030;
 
 // const {Food} = require("./models/foodModel");
 // const {FoodService} =require('./models/foodServiceModel');
-
+// const {Service} =require('./models/serviceModel');
 app.use(cors());
 
 require('./startup/db')();
@@ -25,15 +25,15 @@ let key = config.get("privateKey");
 //     })
 //     console.log(testFood);
 
-//     const foodService = await FoodService.create({
-//       serviceName: "Vesda's Kitchen12333",
+//     const foodService = await Service.create({
+//       serviceName: "Vesda's Kitchen1441",
 //       serviceType: "Food",
 //       availableTicketType:["Standard,Gold"],
 //       updatedAt: new Date(),
 //       createdAt: new Date(),
 //     });
 //     console.log(foodService)
-//     const updatedFS = await FoodService.findByIdAndUpdate(foodService._id,{$push:{menu:testFood._id}},{ new: true, useFindAndModify: false });
+//     const updatedFS = await FoodService.findByIdAndUpdate(foodService._id,{$push:{subService:testFood._id}},{ new: true, useFindAndModify: false });
 //     console.log(updatedFS);
 // }
 

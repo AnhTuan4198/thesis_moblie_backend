@@ -7,7 +7,7 @@ const foodSchema = new Schema({
 		type: String,
 		require: true,
 	},
-	foodKind: {
+	foodType: {
 		type: String,
 		require: true,
 	},
@@ -20,7 +20,7 @@ const foodSchema = new Schema({
 const createFoodValidator = function(data) {
 	const schema = Joi.object({
 		foodName: Joi.string().required(),
-		foodKind: Joi.string().required(),
+		foodType: Joi.string().required(),
 		price: Joi.number()
 	})
 	const result = schema.validate(data);

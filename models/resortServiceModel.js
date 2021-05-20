@@ -1,4 +1,4 @@
-const Joi = require("joi");
+
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
@@ -9,12 +9,12 @@ const resortServiceSchema = new Schema({
 	},
 	price: {
 		type: Number,
-		require: true
+		require: true	
 	}
 });
 
 
 
-const ResortService = mongoose.model("ResortService", resortServiceSchema);
+const ResortServiceItem = mongoose.model("ResortService", resortServiceSchema);
 
-module.exports = { ResortService, createFoodValidator };
+module.exports = { ResortServiceItem };

@@ -32,10 +32,10 @@ const serviceSchema = new Schema(
       require: true,
       default: 1
     },
-    location:[{
-        type:Schema.Types.ObjectId,
-        ref:"Locations"
-    }]
+    location:{
+        type:String,
+        require:true
+    }
   },
   schemaOptions
 );
@@ -45,14 +45,14 @@ const createServiceValidator = function(data) {
 		serviceName: Joi.string().required(),
 		serviceType: Joi.string(),
 		availableTicketType: Joi.array().required(),
-		createdAt: Joi.date(),
-    		updatedAt: Joi.date(),
-		createdBy: Joi.number().required()
+    location:Joi.string().required(),
 	})
 	const result = schema.validate(data);
 	return result;
 }
 
 const Service = mongoose.model("Service", serviceSchema);
+
+
 
 module.exports = { Service, createServiceValidator };

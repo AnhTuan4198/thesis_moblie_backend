@@ -10,5 +10,5 @@ const cinemaServiceSchema = new Schema({
 });
 
 
-const CinemaService = Service.discriminator("Cinema", cinemacinemaServiceSchema);
+const CinemaService = Service.discriminator("Cinema", cinemaServiceSchema);
 module.exports = { CinemaService};

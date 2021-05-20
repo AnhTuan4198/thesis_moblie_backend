@@ -12,6 +12,6 @@ const resortSchema = new Schema({
 });
 
 
-const Resort = Service.discriminator("Resort", resortSchema);
+const ResortService = Service.discriminator("Resort", resortSchema);
 
-module.exports = { Resort };
+module.exports = { ResortService };
