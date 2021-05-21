@@ -22,7 +22,7 @@ const historySchema = new Schema({
     ref: "User",
   },
   validateStatus:{
-    type:boolean
+    type:Boolean
   }
 });
 

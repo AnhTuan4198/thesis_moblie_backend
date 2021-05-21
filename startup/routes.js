@@ -3,7 +3,7 @@ const userRoute = require("../route/User");
 const moduleRoute = require("../route/Module");
 const errorHandler = require("../handler/error");
 const bookingRoute = require('../route/Mobile_booking'); 
-
+const ticketRoute = require('../route/Tickets');
 const movieRoute = require("../route/Movie");
 const foodRoute = require("../route/Food")
 
@@ -12,6 +12,7 @@ const serviceRoute = require("../route/Service");
 module.exports = function (app) {
 	app.use(express.json());
 
+	app.use('/api/tickets',ticketRoute)
 	// all route for user
 	app.use("/auth", userRoute);
 

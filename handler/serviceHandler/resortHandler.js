@@ -34,7 +34,7 @@ exports.resortVerifyTicket = async (identificationObj) => {
       serviceType: validService.serviceType,
       ticketCode: ticketCode,
       user: currentUser,
-       validateStatus:!validService?false:true
+      validateStatus:!validService?false:true
     });
 
     service.open(function (err) {
