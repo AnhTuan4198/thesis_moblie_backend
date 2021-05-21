@@ -35,6 +35,7 @@ exports.foodVerifyTicket = async (identificationObj) => {
       serviceType: validService.serviceType,
       ticketCode: ticketCode,
       user: currentUser,
+      validateStatus:!validService?false:true
     });
 
     service.open(function (err) {
@@ -43,6 +44,26 @@ exports.foodVerifyTicket = async (identificationObj) => {
           message: "Cannot connect to device" + err.message,
         });
       } else {
+        if(!validService){
+          const message = new Message(
+            JSON.stringify({
+              message: "Your ticket is not available for this service!",
+              open: false,
+            })
+          );
+          service.send(deviceId, message, function (err) {
+            if (err) {
+              console.log(`message sent `);
+              return err.toString();
+            } else {
+              console.log("message sent: " + message.getData());
+              // process.exit(0)
+              return newLog;
+            }
+          });
+        }
+
+
         const message = new Message(
           JSON.stringify({
             message: "Validate success!",

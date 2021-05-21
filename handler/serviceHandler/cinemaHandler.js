@@ -38,7 +38,8 @@ exports.cinemaVerifyTicket = async (identificationObj) => {
     let newLog = await History.create({
       serviceName: validService._id,
       ticketCode: identificationObj.ticketCode,
-      user: currentUser._id
+      user: currentUser._id,
+      validateStatus: !validService ? false :true
     });
 
     // Open connection to the device
@@ -48,6 +49,25 @@ exports.cinemaVerifyTicket = async (identificationObj) => {
           message: "Cannot connect to device" + err.message,
         });
       } else {
+        if(!validService){
+          const message = new Message(
+          JSON.stringify({
+            message: "Your ticket is not available for this service!",
+            open: false,
+          })
+        );
+          service.send(deviceId, message, function (err) {
+          if (err) {
+            console.log(`message sent `);
+            return err.toString();
+          } else {
+            console.log("message sent: " + message.getData());
+            // process.exit(0)
+            return newLog;
+          }
+          });
+        }        
+        
         const message = new Message(
           JSON.stringify({
             message: "Validate success!",

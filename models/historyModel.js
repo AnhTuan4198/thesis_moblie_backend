@@ -1,3 +1,4 @@
+const { boolean } = require("joi");
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
@@ -20,6 +21,9 @@ const historySchema = new Schema({
     require: true,
     ref: "User",
   },
+  validateStatus:{
+    type:boolean
+  }
 });
 
 const History = mongoose.model("History", historySchema);
