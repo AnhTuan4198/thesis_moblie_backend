@@ -26,6 +26,10 @@ const TicketSchema = new Schema({
 	endTime: {
 		type: Date,
 		require: true
+	},
+	createdAt:{
+		type:Date,
+		default:new Date()
 	}
 })
 

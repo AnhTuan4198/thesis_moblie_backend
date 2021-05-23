@@ -1,9 +1,10 @@
 const {Ticket} = require('../../models/ticketModel');
 const { User } = require('../../models/userModel');
-
-
+const {groupListByKey} = require('../../ultils/groupByKey');
+const moment = require("moment")
 
 exports.getTickets= async (req,res,next)=>{
+
     try{
         const {userId} = req.query;
         let existUser = await User.findOne({_id:userId});
@@ -14,9 +15,10 @@ exports.getTickets= async (req,res,next)=>{
 
         let availableTicketList = await Ticket.find({user:userId,endTime:{$gte:new Date()}}).sort("-startTime")
         
-        
+        const result = groupListByKey(availableTicketList,"createdAt","tickets");
+      
         return res.status(200).json(
-            availableTicketList
+            result
         )
     }catch(error){
         return next(error)

@@ -1,4 +1,5 @@
-const { Ticket ,createTicketValidator } = require("../../models/ticketModel")
+const { Ticket ,createTicketValidator } = require("../../models/ticketModel");
+const {groupListByKey} = require('../../ultils/groupByKey');
 const uniId = require("uniqid");
 const _ =require("lodash");
 
@@ -31,9 +32,11 @@ exports.booking = async (req,res,next)=> {
             const result  = await Ticket.findById(newTicket._id).populate('user')
             tickets.push(newTicket);
         }
-        // console.log(tickets);
+        console.log(tickets);
+        const groupTicket = groupListByKey(tickets,"createdAt","tickets");
+        console.log(groupListByKey)
        return res.status(200).json({
-           tickets
+           tickets:groupTicket
        })
         
 
