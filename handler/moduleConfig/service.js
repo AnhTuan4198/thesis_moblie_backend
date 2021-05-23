@@ -7,6 +7,7 @@ const { Movie } = require("../../models/movieModel");
 const { FoodService } = require("../../models/foodServiceModel");
 const {Ticket} = require('../../models/ticketModel');
 const { User } = require('../../models/userModel');
+const { groupListByKey } = require("../../ultils/groupByKey");
 
 const specifyService = (serviceType) => {
   switch (serviceType) {
@@ -166,9 +167,12 @@ exports.mobileQueryService = async (req, res, next) => {
     ticketTypeAvailable.forEach(({ticketType})=>{
       if(!listTicketType.includes(ticketType)) listTicketType.push(ticketType)
     })
-    console.log(listTicketType)
-
-    return res.status(200).send("hello");
+   
+    const availableServiceList = await Service.find({availableTicketType:{$in:listTicketType}});
+    const groupedAvailableService = groupListByKey(availableServiceList,"serviceType","services");
+    return res.status(200).json({
+      services:groupedAvailableService
+    });
   } catch (e) {
     return next(e);
   }

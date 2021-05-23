@@ -32,9 +32,9 @@ exports.booking = async (req,res,next)=> {
             const result  = await Ticket.findById(newTicket._id).populate('user')
             tickets.push(newTicket);
         }
-        console.log(tickets);
+       
         const groupTicket = groupListByKey(tickets,"createdAt","tickets");
-        console.log(groupListByKey)
+       
        return res.status(200).json({
            tickets:groupTicket
        })
