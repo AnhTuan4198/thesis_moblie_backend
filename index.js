@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const config = require('config');
+const { foodVerifyTicket } = require('./handler/serviceHandler/foodHandler');
 const PORT = process.env.PORT || 3030;
 
 // const {Food} = require("./models/foodModel");
@@ -16,31 +17,18 @@ require('./startup/event-hub')();
 
 let key = config.get("privateKey");
 
-// const test = async()=>{
-    
-//     const testFood=await Food.create({
-//         foodName:"BanhCanhS",
-//         foodType:"noodle",
-//         price:100000
-//     })
-//     console.log(testFood);
+// foodVerifyTicket({
+//      userId:"6076780b1f44904322698076",
+//       serviceName:"Vesda's Kitchen",
+//       deviceId:"IYC3gKNUP33",
+//       ticketType:"Gold",
+//       ticketCode:"1degkp1dghr7",
+//       serviceKey:"HostName=thesis-hcmut.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=NN2Pq5f9fXxWuiwzRCcV2ZhNE+8spTXK/1hEA9X/GTk=",
+// })
 
-//     const foodService = await Service.create({
-//       serviceName: "Vesda's Kitchen1441",
-//       serviceType: "Food",
-//       availableTicketType:["Standard,Gold"],
-//       updatedAt: new Date(),
-//       createdAt: new Date(),
-//     });
-//     console.log(foodService)
-//     const updatedFS = await FoodService.findByIdAndUpdate(foodService._id,{$push:{subService:testFood._id}},{ new: true, useFindAndModify: false });
-//     console.log(updatedFS);
-// }
-
-// test();
 
 app.listen( PORT ,()=>{
-    console.log("listenning on port " +PORT)
+    console.log("Listening on port " +PORT)
 })
 
 

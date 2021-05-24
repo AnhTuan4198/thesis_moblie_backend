@@ -4,9 +4,8 @@ const { Schema } = mongoose;
 
 const historySchema = new Schema({
   serviceName: {
-    type: Schema.Types.ObjectId,
+    type: String,
     require: true,
-    ref: "Service",
   },
   ticketCode: {
     type: String,
@@ -17,7 +16,7 @@ const historySchema = new Schema({
     default: new Date(),
   },
   user: {
-    type: Object, type: Schema.Types.ObjectId,
+    type:Schema.Types.ObjectId,
     require: true,
     ref: "User",
   },

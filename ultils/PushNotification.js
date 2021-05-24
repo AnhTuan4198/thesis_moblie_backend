@@ -1,5 +1,5 @@
 const {Expo} = require('expo-server-sdk');
-const errorHandler = require('../handler/error')
+const errorHandler = require('../handler/error');
 
 let tickets =[];
 
@@ -10,7 +10,10 @@ const pushNotification = async (targetDeviceToken,message)=>{
         to:targetDeviceToken,
         sound:"default",
         body:item.message,
-        data:{_displayInForeground:true}
+        data:{
+            _displayInForeground:true,
+            ...item.data
+        }
     }))
     let chunks = await expo.chunkPushNotifications(messages);
     console.log(chunks);
@@ -26,6 +29,11 @@ const pushNotification = async (targetDeviceToken,message)=>{
     })();
 }
 
-// pushNotification("ExponentPushToken[lQxcCAHPquufOlvsKSBr2p]",[{message:"hello"},{message:"say hi"}])
+// pushNotification("ExponentPushToken[lQxcCAHPquufOlvsKSBr2p]",[{
+//     message:"hello",
+//     data:{
+//         historyId:"testingHistoryId"
+//     }
+// }])
 
 module.exports = {pushNotification,tickets};

@@ -5,11 +5,14 @@ const errorHandler = require("../error");
 const { Movie, createMovieValidator } = require("../../models/movieModel");
 const { Service } = require("../../models/serviceModel");
 const { History } = require("../../models/historyModel");
+const { User } = require("../../models/userModel");
 const { Ticket } = require("../../models/ticketModel");
+const { pushNotification } = require("../../ultils/PushNotification");
 
 exports.cinemaVerifyTicket = async (identificationObj) => {
   try {
     const {
+      userId,
       serviceName,
       deviceId,
       ticketCode,
@@ -23,23 +26,23 @@ exports.cinemaVerifyTicket = async (identificationObj) => {
       serviceName: { $eq: serviceName },
       availableTicket: { $eq: ticketType },
     });
-    if (!validService)
-      return errorHandler({
-        message: "Unavailable service for this user",
-        status: 403,
-      });
+
+    const userNotificationToken = await User.findOne({
+      _id: userId,
+    }).select({ _id: 0, notificationToken: 1 });
+
     // Custom implementation for movie service
     Movie.updateOne(
       { serviceName: serviceName },
-      { $inc: { availableSeat: 1 } }
+      { $inc: { availableSeat: -1 } }
     );
-    let currentUser = await Ticket.findOne({ ticketCode: ticketCode }).user;
+
     // log history
     let newLog = await History.create({
-      serviceName: validService._id,
-      ticketCode: identificationObj.ticketCode,
-      user: currentUser._id,
-      validateStatus: !validService ? false :true
+      serviceName: serviceName,
+      ticketCode: ticketCode,
+      user: userId,
+      validateStatus: !validService ? false : true,
     });
 
     // Open connection to the device
@@ -49,41 +52,62 @@ exports.cinemaVerifyTicket = async (identificationObj) => {
           message: "Cannot connect to device" + err.message,
         });
       } else {
-        if(!validService){
+        if (!validService) {
           const message = new Message(
-          JSON.stringify({
-            message: "Your ticket is not available for this service!",
-            open: false,
-          })
-        );
+            JSON.stringify({
+              message: "Your ticket is not available for this service!",
+              open: false,
+            })
+          );
+          const notification = [
+            {
+              message: "Validation fail",
+              data: newLog._id,
+            },
+          ];
+
+          pushNotification(
+            userNotificationToken.notificationToken,
+            notification
+          );
           service.send(deviceId, message, function (err) {
-          if (err) {
-            console.log(`message sent `);
-            return err.toString();
-          } else {
-            console.log("message sent: " + message.getData());
-            // process.exit(0)
-            return newLog;
-          }
+            if (err) {
+              console.log(`message sent `);
+              return err.toString();
+            } else {
+              console.log("message sent: " + message.getData());
+              // process.exit(0)
+              return newLog;
+            }
           });
-        }        
-        
-        const message = new Message(
-          JSON.stringify({
-            message: "Validate success!",
-            open: true,
-          })
-        );
-        service.send(deviceId, message, function (err) {
-          if (err) {
-            console.log(`message sent `);
-            return err.toString();
-          } else {
-            console.log("message sent: " + message.getData());
-            // process.exit(0)
-            return newLog;
-          }
-        });
+        } else {
+          const message = new Message(
+            JSON.stringify({
+              message: "Validate success!",
+              open: true,
+            })
+          );
+          const notification = [
+            {
+              message: "Validation success",
+              data: newLog._id,
+            },
+          ];
+          pushNotification(
+            userNotificationToken.notificationToken,
+            notification
+          );
+          service.send(deviceId, message, function (err) {
+            if (err) {
+              console.log(`message sent `);
+              return err.toString();
+            } else {
+              console.log("message sent: " + message.getData());
+              // process.exit(0)
+              return newLog;
+            }
+          });
+        }
       }
     });
   } catch (error) {

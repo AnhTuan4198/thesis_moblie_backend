@@ -42,13 +42,15 @@ const roomHandler = (payload) => {
 const eventHandler = function (messages) {
 	for (const message of messages) {
 		const splitTicket = message.body.toString().split('-');
-		const ticketCode=splitTicket[0];
-		const ticketType=splitTicket[1];
+		const userId = splitTicket[0];
+		const ticketCode=splitTicket[1];
+		const ticketType=splitTicket[2];
 		const serviceName = message.properties.serviceName;
 		const serviceType = message.properties.serviceType;
 		const gate = message.properties.gate;
 		const deviceId = message.systemProperties['iothub-connection-device-id'];
 		const payload = {
+			userId,
 			ticketCode,
 			ticketType,
 			serviceName,

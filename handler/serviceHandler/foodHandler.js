@@ -4,10 +4,15 @@ const errorHandler = require("../error");
 
 const { Food, createFoodValidator } = require("../../models/foodModel");
 const { Service } = require("../../models/serviceModel");
+const { User } = require("../../models/userModel");
+const { Ticket } = require("../../models/ticketModel");
+const { History } = require("../../models/historyModel");
+const { pushNotification } = require("../../ultils/PushNotification");
 
 exports.foodVerifyTicket = async (identificationObj) => {
   try {
     const {
+      userId,
       serviceName,
       deviceId,
       ticketCode,
@@ -17,25 +22,21 @@ exports.foodVerifyTicket = async (identificationObj) => {
 
     const service = Client.fromConnectionString(serviceKey);
 
+    const userNotificationToken = await User.findOne({
+      _id: userId,
+    }).select({ _id: 0, notificationToken: 1 });
+
+    console.log(userNotificationToken);
     let validService = await Service.findOne({
       serviceName: { $eq: serviceName },
-      availableTicket: { $eq: ticketType },
+      availableTicketType: { $eq: ticketType },
     });
-    if (!validService)
-      return errorHandler({
-        message: "Unavailable service for this user",
-        status: 403,
-      });
-    // Custom implement for food service
 
-    let currentUser = await Ticket.findOne({ ticketCode: ticketCode }).user;
-    // log history
     let newLog = await History.create({
-      serviceName: validService.serviceName,
-      serviceType: validService.serviceType,
+      serviceName: serviceName,
       ticketCode: ticketCode,
-      user: currentUser,
-      validateStatus:!validService?false:true
+      user: userId,
+      validateStatus: !validService ? false : true,
     });
 
     service.open(function (err) {
@@ -44,13 +45,25 @@ exports.foodVerifyTicket = async (identificationObj) => {
           message: "Cannot connect to device" + err.message,
         });
       } else {
-        if(!validService){
+        if (!validService) {
           const message = new Message(
             JSON.stringify({
               message: "Your ticket is not available for this service!",
               open: false,
             })
           );
+          const notification = [
+            {
+              message: "Validation fail",
+              data: newLog._id,
+            },
+          ];
+
+          pushNotification(
+            userNotificationToken.notificationToken,
+            notification
+          );
+
           service.send(deviceId, message, function (err) {
             if (err) {
               console.log(`message sent `);
@@ -61,29 +74,39 @@ exports.foodVerifyTicket = async (identificationObj) => {
               return newLog;
             }
           });
-        }
-
-
-        const message = new Message(
+        }else{
+          const message = new Message(
           JSON.stringify({
             message: "Validate success!",
             open: true,
           })
         );
+        const notification = [
+          {
+            message: "Validation success",
+            data: newLog._id,
+          },
+        ];
+        pushNotification(userNotificationToken.notificationToken, notification);
         service.send(deviceId, message, function (err) {
           if (err) {
             console.log(`message sent `);
             return err.toString();
           } else {
             console.log("message sent: " + message.getData());
-            // process.exit(0)
+            console.log(message.getData());
             return newLog;
           }
         });
+        }
       }
     });
   } catch (error) {
-    return next();
+    console.log(error);
+    // return  errorHandler({
+    //   message:"Error",
+    //   statusCode:500
+    // })
   }
 };
 
