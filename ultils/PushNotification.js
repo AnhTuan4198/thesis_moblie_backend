@@ -12,7 +12,7 @@ const pushNotification = async (targetDeviceToken,message)=>{
         body:item.message,
         data:{
             _displayInForeground:true,
-            ...item.data
+           params:item.data
         }
     }))
     let chunks = await expo.chunkPushNotifications(messages);

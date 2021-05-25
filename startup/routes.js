@@ -5,7 +5,8 @@ const errorHandler = require("../handler/error");
 const bookingRoute = require('../route/Mobile_booking'); 
 const ticketRoute = require('../route/Tickets');
 const movieRoute = require("../route/Movie");
-const foodRoute = require("../route/Food")
+const foodRoute = require("../route/Food");
+const historyRoute = require('../route/History')
 
 const serviceRoute = require("../route/Service");
 
@@ -26,7 +27,7 @@ module.exports = function (app) {
 	app.use("/booking",bookingRoute)
 	app.use("/movie", movieRoute);
 	app.use("/food", foodRoute);
-
+	app.use("/history",historyRoute);
 	//app error handler
 	app.use(errorHandler);
 }
