@@ -5,9 +5,6 @@ const config = require('config');
 const { foodVerifyTicket } = require('./handler/serviceHandler/foodHandler');
 const PORT = process.env.PORT || 3030;
 
-// const {Food} = require("./models/foodModel");
-// const {FoodService} =require('./models/foodServiceModel');
-// const {Service} =require('./models/serviceModel');
 app.use(cors());
 
 require('./startup/db')();

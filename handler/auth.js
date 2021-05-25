@@ -11,20 +11,21 @@ exports.register = async (req, res, next) => {
   try {
     let existEmail = await User.findOne({ email: req.body.email });
     if (existEmail)
-      return next({ message: "Emaill already exist", statusCode: 400 });
+      return next({ message: "Email already exist", statusCode: 400 });
 
     let existUserName = await User.findOne({ userName: req.body.userName });
     if (existUserName)
       return next({ message: "Username already exist", statusCode: 400 });
 
     let newUser = await User.create({ ...req.body });
-    const { _id, userName, email } = newUser;
+    const { _id, userName, email,currentAuthority } = newUser;
     let token = newUser.generateJWToken();
     return res.status(200).json({
       _id,
       userName,
       email,
       token,
+      currentAuthority
     });
   } catch (error) {
     return next(error);
@@ -42,13 +43,15 @@ exports.signIn = async (req, res, next) => {
     const isValid = await user.comparePassword(req.body.password);
     isValid;
     if (isValid) {
-      const { _id, userName, email } = user;
+      const { _id, userName, email,currentAuthority} = user;
       let token = user.generateJWToken();
-      return res.send({
+      return res.status(200).send({
+        status:'ok',
         _id,
         userName,
         email,
         token,
+        currentAuthority
       });
     } else {
       return next({

@@ -38,13 +38,17 @@ const userSchema = new Schema({
   },
   birthDay:{
       type:Date,
-      require:true
   },
   address:{
       type:String
   },
   notificationToken:{
     type:String
+  },
+  currentAuthority:{
+    type:String,
+    require:true,
+    default:"user"
   }
 });
 
@@ -91,6 +95,8 @@ const registerValidator = function (data) {
     password: Joi.string().min(4).max(32).required(),
     userName: Joi.string().min(3).max(32).required(),
     gender: Joi.required(),
+    currentAuthority: Joi.string().required(),
+    type:Joi.string().required()
   });
   const result = schema.validate(data);
   return result;
@@ -100,6 +106,7 @@ const signInValidator = function (data) {
    const schema = Joi.object({
      email: Joi.string().email().required(),
      password: Joi.string().min(4).max(32).required(),
+     type:Joi.string()
    });
    const result = schema.validate(data);
    return result;
