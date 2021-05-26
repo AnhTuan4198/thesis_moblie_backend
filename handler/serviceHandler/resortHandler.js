@@ -6,6 +6,7 @@ const { Ticket } = require("../../models/ticketModel");
 const { User } = require("../../models/userModel");
 const { History } = require("../../models/historyModel");
 const { pushNotification } = require("../../ultils/PushNotification");
+const moment = require("moment");
 
 exports.resortVerifyTicket = async (identificationObj) => {
   try {
@@ -18,6 +19,13 @@ exports.resortVerifyTicket = async (identificationObj) => {
       serviceKey,
     } = identificationObj;
 
+    let isValid = false;
+    let isValidTime = false;
+    const currentTime = moment(new Date()).format("YYYY-MM-DD");
+    let endTime;
+    let startTime;
+    let messageNotice;
+
     const service = Client.fromConnectionString(serviceKey);
 
     const userNotificationToken = await User.findOne({
@@ -28,6 +36,35 @@ exports.resortVerifyTicket = async (identificationObj) => {
       serviceName: { $eq: serviceName },
       availableTicket: { $eq: ticketType },
     });
+     let validTicket = await Ticket.findOne({
+      ticketCode: ticketCode,
+    });
+    if (validTicket) {
+      endTime = moment(validTicket.endTime).format("YYYY-MM-DD");
+      startTime = moment(validTicket.startTime).format("YYYY-MM-DD");
+    }
+
+    console.log(moment(currentTime).isBetween(startTime, endTime));
+    if (
+      moment(currentTime).isBetween(
+        startTime,
+        endTime
+      )
+    ) {
+      isValidTime = true;
+    }
+
+
+    if (validService !== null && validTicket !== null && isValidTime) {
+      isValid = true;
+      messageNotice = "Validate ticket success!!";
+    }
+
+    if (!validTicket) messageNotice = "Your ticket is not available";
+    else if (!validService)
+      messageNotice = "Your ticket is not available for this service !";
+    else if (!isValidTime)
+      messageNotice = "Your ticket is not available at this time!";
 
     // Custom implement for resort service
 
@@ -45,10 +82,10 @@ exports.resortVerifyTicket = async (identificationObj) => {
           message: "Cannot connect to device" + err.message,
         });
       } else {
-        if (!validService) {
+        if (!isValid) {
           const message = new Message(
             JSON.stringify({
-              message: "Your ticket is not available for this service!",
+              message: messageNotice,
               open: false,
             })
           );
@@ -76,7 +113,7 @@ exports.resortVerifyTicket = async (identificationObj) => {
         } else {
           const message = new Message(
             JSON.stringify({
-              message: "Validate success!",
+              message: messageNotice,
               open: true,
             })
           );

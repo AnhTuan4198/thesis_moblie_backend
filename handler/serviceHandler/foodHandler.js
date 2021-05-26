@@ -8,6 +8,7 @@ const { User } = require("../../models/userModel");
 const { Ticket } = require("../../models/ticketModel");
 const { History } = require("../../models/historyModel");
 const { pushNotification } = require("../../ultils/PushNotification");
+const moment = require("moment");
 
 exports.foodVerifyTicket = async (identificationObj) => {
   try {
@@ -19,6 +20,13 @@ exports.foodVerifyTicket = async (identificationObj) => {
       ticketType,
       serviceKey,
     } = identificationObj;
+    
+    let isValid = false;
+    let isValidTime = false;
+    const currentTime = moment(new Date()).format("YYYY-MM-DD");
+    let endTime;
+    let startTime;
+    let messageNotice;
 
     const service = Client.fromConnectionString(serviceKey);
 
@@ -26,29 +34,57 @@ exports.foodVerifyTicket = async (identificationObj) => {
       _id: userId,
     }).select({ _id: 0, notificationToken: 1 });
 
-    console.log(userNotificationToken);
     let validService = await Service.findOne({
       serviceName: { $eq: serviceName },
       availableTicketType: { $eq: ticketType },
     });
 
+    let validTicket = await Ticket.findOne({
+      ticketCode: ticketCode,
+    });
+    if (validTicket) {
+      endTime = moment(validTicket.endTime).format("YYYY-MM-DD");
+      startTime = moment(validTicket.startTime).format("YYYY-MM-DD");
+    }
+
+    if (
+      moment(currentTime).isBetween(
+        startTime,
+        endTime
+      )
+    ) {
+      isValidTime = true;
+    }
+
+
+    if (validService !== null && validTicket !== null && isValidTime) {
+      isValid = true;
+      messageNotice = "Validate ticket success!!";
+    }
+
+    if (!validTicket) messageNotice = "Your ticket is not available";
+    else if (!validService)
+      messageNotice = "Your ticket is not available for this service !";
+    else if (!isValidTime)
+      messageNotice = "Your ticket is not available at this time!";
     let newLog = await History.create({
       serviceName: serviceName,
       ticketCode: ticketCode,
       user: userId,
-      validateStatus: !validService ? false : true,
+      validateStatus: isValid,
     });
 
     service.open(function (err) {
       if (err) {
+        console.log(`catch error `);
         return errorHandler({
           message: "Cannot connect to device" + err.message,
         });
       } else {
-        if (!validService) {
+        if (isValid === false) {
           const message = new Message(
             JSON.stringify({
-              message: "Your ticket is not available for this service!",
+              message: messageNotice,
               open: false,
             })
           );
@@ -58,7 +94,7 @@ exports.foodVerifyTicket = async (identificationObj) => {
               data: newLog._id,
             },
           ];
-
+          console.log(message.getData());
           pushNotification(
             userNotificationToken.notificationToken,
             notification
@@ -74,30 +110,34 @@ exports.foodVerifyTicket = async (identificationObj) => {
               return newLog;
             }
           });
-        }else{
+        } else {
           const message = new Message(
-          JSON.stringify({
-            message: "Validate success!",
-            open: true,
-          })
-        );
-        const notification = [
-          {
-            message: "Validation success",
-            data: newLog._id,
-          },
-        ];
-        pushNotification(userNotificationToken.notificationToken, notification);
-        service.send(deviceId, message, function (err) {
-          if (err) {
-            console.log(`message sent `);
-            return err.toString();
-          } else {
-            console.log("message sent: " + message.getData());
-            console.log(message.getData());
-            return newLog;
-          }
-        });
+            JSON.stringify({
+              message: messageNotice,
+              open: true,
+            })
+          );
+          console.log(`wrong way`);
+          const notification = [
+            {
+              message: "Validation success!",
+              data: newLog._id,
+            },
+          ];
+          pushNotification(
+            userNotificationToken.notificationToken,
+            notification
+          );
+          service.send(deviceId, message, function (err) {
+            if (err) {
+              console.log(`message sent `);
+              return err.toString();
+            } else {
+              console.log("message sent: " + message.getData());
+              console.log(message.getData());
+              return newLog;
+            }
+          });
         }
       }
     });

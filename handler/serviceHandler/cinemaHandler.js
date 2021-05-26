@@ -8,6 +8,7 @@ const { History } = require("../../models/historyModel");
 const { User } = require("../../models/userModel");
 const { Ticket } = require("../../models/ticketModel");
 const { pushNotification } = require("../../ultils/PushNotification");
+const moment = require("moment");
 
 exports.cinemaVerifyTicket = async (identificationObj) => {
   try {
@@ -19,6 +20,13 @@ exports.cinemaVerifyTicket = async (identificationObj) => {
       ticketType,
       serviceKey,
     } = identificationObj;
+
+     let isValid = false;
+    let isValidTime = false;
+    const currentTime = moment(new Date()).format("YYYY-MM-DD");
+    let endTime;
+    let startTime;
+    let messageNotice;
 
     const service = Client.fromConnectionString(serviceKey);
 
@@ -37,6 +45,36 @@ exports.cinemaVerifyTicket = async (identificationObj) => {
       { $inc: { availableSeat: -1 } }
     );
 
+    let validTicket = await Ticket.findOne({
+      ticketCode: ticketCode,
+    });
+    if (validTicket) {
+      endTime = moment(validTicket.endTime).format("YYYY-MM-DD");
+      startTime = moment(validTicket.startTime).format("YYYY-MM-DD");
+    }
+
+    console.log(moment(currentTime).isBetween(startTime, endTime));
+    if (
+      moment(currentTime).isBetween(
+        startTime,
+        endTime
+      )
+    ) {
+      isValidTime = true;
+    }
+
+
+    if (validService !== null && validTicket !== null && isValidTime) {
+      isValid = true;
+      messageNotice = "Validate ticket success!!";
+    }
+
+    if (!validTicket) messageNotice = "Your ticket is not available";
+    else if (!validService)
+      messageNotice= "Your ticket is not available for this service !";
+    else if (!isValidTime)
+      messageNotice = "Your ticket is not available at this time!";
+
     // log history
     let newLog = await History.create({
       serviceName: serviceName,
@@ -52,10 +90,10 @@ exports.cinemaVerifyTicket = async (identificationObj) => {
           message: "Cannot connect to device" + err.message,
         });
       } else {
-        if (!validService) {
+        if (!isValid) {
           const message = new Message(
             JSON.stringify({
-              message: "Your ticket is not available for this service!",
+              message: messageNotice,
               open: false,
             })
           );
@@ -83,7 +121,7 @@ exports.cinemaVerifyTicket = async (identificationObj) => {
         } else {
           const message = new Message(
             JSON.stringify({
-              message: "Validate success!",
+              message: messageNotice,
               open: true,
             })
           );

@@ -14,15 +14,14 @@ require('./startup/event-hub')();
 
 let key = config.get("privateKey");
 
-// foodVerifyTicket({
-//      userId:"6076780b1f44904322698076",
-//       serviceName:"Vesda's Kitchen",
-//       deviceId:"IYC3gKNUP33",
-//       ticketType:"Gold",
-//       ticketCode:"1degkp1dghr7",
-//       serviceKey:"HostName=thesis-hcmut.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=NN2Pq5f9fXxWuiwzRCcV2ZhNE+8spTXK/1hEA9X/GTk=",
-// })
-
+foodVerifyTicket({
+     userId:"6076780b1f44904322698076",
+      serviceName:"Vesda's Kitchen",
+      deviceId:"IYC3gKNUP33",
+      ticketType:"Standard",
+      ticketCode:"1degkp1dg1ky",
+      serviceKey:"HostName=thesis-hcmut.azure-devices.net;SharedAccessKeyName=service;SharedAccessKey=NN2Pq5f9fXxWuiwzRCcV2ZhNE+8spTXK/1hEA9X/GTk=",
+})
 
 
 app.listen( PORT ,()=>{
