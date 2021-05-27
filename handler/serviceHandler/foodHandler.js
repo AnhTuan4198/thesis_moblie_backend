@@ -20,7 +20,7 @@ exports.foodVerifyTicket = async (identificationObj) => {
       ticketType,
       serviceKey,
     } = identificationObj;
-    
+    console.log(identificationObj);
     let isValid = false;
     let isValidTime = false;
     const currentTime = moment(new Date()).format("YYYY-MM-DD");
@@ -73,7 +73,7 @@ exports.foodVerifyTicket = async (identificationObj) => {
       user: userId,
       validateStatus: isValid,
     });
-
+    console.log(newLog);
     service.open(function (err) {
       if (err) {
         console.log(`catch error `);

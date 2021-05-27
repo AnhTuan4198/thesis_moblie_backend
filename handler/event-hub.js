@@ -59,6 +59,7 @@ const eventHandler = function (messages) {
 			deviceId,
 			serviceKey:serviceConStr
 		}
+		console.log(message)
 		switch (message.properties.serviceType) {
 			case "Cinema":
 				console.log("in cinema handler	")
