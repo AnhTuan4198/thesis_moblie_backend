@@ -41,6 +41,15 @@ const roomHandler = (payload) => {
 
 const eventHandler = function (messages) {
 	for (const message of messages) {
+		if(typeof message.body !== String ) return errorHandler({
+			message:"invalid ticket",
+			statusCode:400
+		})
+		const regex = /\w{2,24}-\w{2,12}-\w{2,}/gm;
+		if(regex.test(message.body) === false) return errorHandler({
+			message:"invalid ticket",
+			statusCode:4	
+		})
 		const splitTicket = message.body.toString().split('-');
 		const userId = splitTicket[0];
 		const ticketCode=splitTicket[1];
