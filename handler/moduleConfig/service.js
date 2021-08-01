@@ -75,9 +75,9 @@ exports.getSpecificService = async (req, res, next) => {
     ).populate("subService");
     let {subService} = service;
     let newSize = skipItems + size - 1;
-    if(subService.length < (skipItems + size - 1)){
-      newSize = subService.length ;
-    }
+    // if(subService.length < (skipItems + size - 1)){
+    //   newSize = subService.length ;
+    // }
     let querySubService =  subService.slice(skipItems,newSize);
     const result = {
        data: querySubService,
