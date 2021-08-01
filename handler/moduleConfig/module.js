@@ -64,7 +64,7 @@ exports.addModule = async(req, res, next) => {
 exports.updateModuleService = async (req, res, next) => {
   try {
     let requestBody = { ...req.body };
-    console.log(requestBody);
+
     const { error } = updateModuleValidator(requestBody["serviceConfig"]);
     if (error) return res.status(400).send(error.details[0].message);
    
@@ -85,7 +85,6 @@ exports.updateModuleService = async (req, res, next) => {
         message: "Service does not exist",
         statusCode: 404,
       });
-      console.log(existService);
       await Module.findOneAndUpdate(
       {
         moduleId: req.params.module_id,
@@ -102,10 +101,11 @@ exports.updateModuleService = async (req, res, next) => {
       gate: updatedModule.gate,
       service_type:existService.serviceType
     };
+    
     res.locals["moduleId"] = updatedModule.moduleId;
     res.locals["serviceConfig"] = serviceConfig;
-    console.log(`end`)
-    return next();
+    
+    next();
   } catch (error) {
     return next(error);
   }

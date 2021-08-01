@@ -8,6 +8,7 @@ const { FoodService } = require("../../models/foodServiceModel");
 const {Ticket} = require('../../models/ticketModel');
 const { User } = require('../../models/userModel');
 const { groupListByKey } = require("../../ultils/groupByKey");
+const { subscribe } = require("../../route/Service");
 
 const specifyService = (serviceType) => {
   switch (serviceType) {
@@ -60,17 +61,32 @@ exports.getAllService = async (req, res, next) => {
 
 exports.getSpecificService = async (req, res, next) => {
   try {
-    //  console.log(req.query)
+     const { current, pageSize } = req.query;
+    const size = parseInt(pageSize, 10);
+    const currentPage = parseInt(current, 10);
+    const skipItems = (currentPage - 1) * size;
     let service = await Service.findOne(
       { _id: req.params.service_id },
       {
         serviceName: 1,
-        availableTicket: 1,
+        availableTicketType: 1,
         createdBy: 1,
       }
     ).populate("subService");
-    console.log(service);
-    return res.status(200).send(service);
+    let {subService} = service;
+    let newSize = skipItems + size - 1;
+    if(subService.length < (skipItems + size - 1)){
+      newSize = subService.length ;
+    }
+    let querySubService =  subService.slice(skipItems,newSize);
+    const result = {
+       data: querySubService,
+      total:subService.length,
+      success: true,
+      pageSize: size,
+      current: currentPage || 1,
+    }
+    return res.status(200).send(result);
   } catch (error) {
     return next(error);
   }
