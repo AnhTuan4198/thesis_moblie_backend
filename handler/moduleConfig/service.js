@@ -81,7 +81,7 @@ exports.getSpecificService = async (req, res, next) => {
     let querySubService =  subService.slice(skipItems,newSize);
     const result = {
        data: querySubService,
-      total:subService.length,
+      total:subService.length||10,
       success: true,
       pageSize: size,
       current: currentPage || 1,
