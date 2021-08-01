@@ -46,10 +46,8 @@ const eventHandler = function (messages) {
 			statusCode:400
 		})
 		const regex = /\w{2,24}-\w{2,12}-\w{2,}/gm;
-		if(regex.test(message.body) === false) return errorHandler({
-			message:"invalid ticket",
-			statusCode:4	
-		})
+		if(regex.test(message.body) === false) message.body = "nan-nan-nan";
+
 		const splitTicket = message.body.toString().split('-');
 		const userId = splitTicket[0];
 		const ticketCode=splitTicket[1];
